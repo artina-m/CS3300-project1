@@ -23,6 +23,13 @@
 
 	var mapStationID = {};
 
+	var minWeekday = Number.MAX_SAFE_INTEGER;
+	var maxWeekday = Number.MIN_SAFE_INTEGER;
+
+	var minWeekend = Number.MAX_SAFE_INTEGER;
+	var maxWeekend = Number.MIN_SAFE_INTEGER;
+
+
 	function parseLine(line) {
 		return {
 		startTime: new Date(line["starttime"]),
@@ -111,12 +118,19 @@
 			weekendTrips[i] = weekendTrips[i] / 2.0;
 			}	
 
+		
 		for ( var station in mapStationID){
 			mapStationID[station].weekdayRides = mapStationID[station].weekdayRides / 5.0;
-
 			mapStationID[station].weekendRides = mapStationID[station].weekendRides / 2.0;
+			
+			minWeekday = Math.min(minWeekday,mapStationID[station].weekdayRides ); // 0.4
+			maxWeekday = Math.max(maxWeekday, mapStationID[station].weekdayRides); // 1445.4
+			minWeekend = Math.min(minWeekend,mapStationID[station].weekendRides );  // 0
+			maxWeekend = Math.max(maxWeekend, mapStationID[station].weekendRides);  // 1003.5
+
 		}
 	});
+
 	</script>
 </body>
 
