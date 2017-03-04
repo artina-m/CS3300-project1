@@ -3,29 +3,41 @@
 <head>
 	<title>CS 3300 Project 1</title>
 	<script src="https://d3js.org/d3.v4.min.js"></script>
+
 </head>
 
 <body>
 	<script>
-	var bikeData;
+	var bikeData ;
+
+	var weekendTrips = [];
+	var weekdayTrip = [];
+
+	var mapSationId = {};
+
 
 	function parseLine(line) {
 		return {
-		StartTime: line["starttime"],
-		StopTime: line["stoptime"],
+		startTime: new Date(line["starttime"]),
+		stopTime: new Date(line["stoptime"]),
 
-		StartID: line["start station id"],
-		StartLat: line["start station latitude"],
-		StartLong: line["start station longitude"],
+		startID: line["start station id"],
+		startName: line["start station name"],
+		startLat: Number(line["start station latitude"]),
+		startLong: Number(line["start station longitude"]),
 
-		StopID: line["end station id"],
-		StopLat: line["end station latitude"],
-		StopLong: line["end station longitude"]
+		stopID: line["end station id"],
+		endName: line["end station name"],
+		stopLat: Number(line["end station latitude"]),
+		stopLong: Number(line["end station longitude"])
 	};
-
+	
 	}
+
 	d3.csv("citibike0916.csv", parseLine, function(error,data){
 		bikeData = data;
+
+
 	});
 
 	</script>
