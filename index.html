@@ -18,11 +18,10 @@
 		weekdayTrips.push(0);
 	}
 
-	var weekendTotalTrips;
-	var weekdayTotalTrips;
+	var weekendTotalTrips = 0 ;
+	var weekdayTotalTrips = 0;
 
 	var mapStationId = {};
-
 
 	function parseLine(line) {
 		return {
@@ -52,24 +51,31 @@
 			if (hour != 2 && hour != 3 && hour != 4 && hour !=5) {
 
 				// Create index for each hour
-				hour = hour - 6;
 				if (hour >= 0 && hour <= 1) { 
 					hour = hour + 24;
 				}
-
+				hour = hour - 6;
 
 				// Weekday Trip
 				if (d.startTime.getDay() >= 1 && d.startTime.getDay() <= 5) {
 						weekdayTrips[hour] = weekdayTrips[hour] + 1;
+						weekdayTotalTrips  = weekdayTotalTrips + 1;
 				}
-
+				// Weekend Trip
 				else {
 					weekendTrips[hour] = weekendTrips[hour] + 1;
+					weekendTotalTrips  = weekendTotalTrips + 1;
 				}
 			}
 		});
-	});
 
+		// Find average trips per day
+		for(i = 0; i<20; i ++) {
+			console.log(weekdayTrips[i]);
+			weekdayTrips[i] = weekdayTrips[i] / 5.0;
+			weekendTrips[i] = weekendTrips[i] / 2.0;
+			}	
+	});
 
 	</script>
 </body>
