@@ -2,9 +2,33 @@
 <html>
 <head>
 	<title>CS 3300 Project 1</title>
+	<script src="https://d3js.org/d3.v4.min.js"></script>
 </head>
 
 <body>
+	<script>
+	var bikeData;
+
+	function parseLine(line) {
+		return {
+		StartTime: line["starttime"],
+		StopTime: line["stoptime"],
+
+		StartID: line["start station id"],
+		StartLat: line["start station latitude"],
+		StartLong: line["start station longitude"],
+
+		StopID: line["end station id"],
+		StopLat: line["end station latitude"],
+		StopLong: line["end station longitude"]
+	};
+
+	}
+	d3.csv("citibike0916.csv", parseLine, function(error,data){
+		bikeData = data;
+	});
+
+	</script>
 </body>
 
 </html>
