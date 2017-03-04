@@ -21,7 +21,7 @@
 	var weekendTotalTrips = 0 ;
 	var weekdayTotalTrips = 0;
 
-	var mapStationId = {};
+	var mapStationID = {};
 
 	function parseLine(line) {
 		return {
@@ -60,21 +60,65 @@
 				if (d.startTime.getDay() >= 1 && d.startTime.getDay() <= 5) {
 						weekdayTrips[hour] = weekdayTrips[hour] + 1;
 						weekdayTotalTrips  = weekdayTotalTrips + 1;
+
+						if (!(d.startID in mapStationID)) {
+							mapStationID[d.startID] = {longitude: d.startLong,latitude: d.startLat, 
+								weekdayStart: 1, weekdayStop: 0, weekendStart:0, weekendStop: 0, id: d.startID, name: d.startName };
+						}
+
+						else {
+							mapStationID[d.startID].weekdayStart = mapStationID[d.startID].weekdayStart + 1;
+						}
+
+						if (!(d.stopID in mapStationID)) {
+							mapStationID[d.stopID] = {longitude: d.startLong,latitude: d.startLat, 
+								weekdayStart: 0, weekdayStop: 1, weekendStart:0, weekendStop: 0, id: d.startID, name: d.startName };
+						}
+						
+						else {
+							mapStationID[d.stopID].weekdayStop = mapStationID[d.stopID].weekdayStop + 1;
+						}
 				}
 				// Weekend Trip
 				else {
 					weekendTrips[hour] = weekendTrips[hour] + 1;
 					weekendTotalTrips  = weekendTotalTrips + 1;
+
+					if (!(d.startID in mapStationID)) {
+							mapStationID[d.startID] = {longitude: d.startLong,latitude: d.startLat, 
+								weekdayStart: 0, weekdayStop: 0, weekendStart:1, weekendStop: 0, id: d.startID, name: d.startName };
+						}
+
+						else {
+							mapStationID[d.startID].weekendStart = mapStationID[d.startID].weekendStart + 1;
+						}
+
+						if (!(d.stopID in mapStationID)) {
+							mapStationID[d.stopID] = {longitude: d.startLong,latitude: d.startLat, 
+								weekdayStart: 0, weekdayStop: 0, weekendStart:0, weekendStop: 1, id: d.startID, name: d.startName };
+						}
+						
+						else {
+							mapStationID[d.stopID].weekendStop = mapStationID[d.stopID].weekendStop + 1;
+						}
 				}
 			}
 		});
 
 		// Find average trips per day
 		for(i = 0; i<20; i ++) {
-			console.log(weekdayTrips[i]);
 			weekdayTrips[i] = weekdayTrips[i] / 5.0;
 			weekendTrips[i] = weekendTrips[i] / 2.0;
 			}	
+
+		for ( var station in mapStationID){
+			mapStationID[station].weekdayStart = mapStationID[station].weekdayStart / 5.0;
+			mapStationID[station].weekdayStop = mapStationID[station].weekdayStop / 5.0;
+
+			mapStationID[station].weekendStart = mapStationID[station].weekendStart / 2.0;
+			mapStationID[station].weekendStop = mapStationID[station].weekendStop / 2.0;
+
+		}
 	});
 
 	</script>
