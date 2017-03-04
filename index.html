@@ -63,20 +63,20 @@
 
 						if (!(d.startID in mapStationID)) {
 							mapStationID[d.startID] = {longitude: d.startLong,latitude: d.startLat, 
-								weekdayStart: 1, weekdayStop: 0, weekendStart:0, weekendStop: 0, id: d.startID, name: d.startName };
+								weekdayRides: 1, weekendRides: 0,id: d.startID, name: d.startName };
 						}
 
 						else {
-							mapStationID[d.startID].weekdayStart = mapStationID[d.startID].weekdayStart + 1;
+							mapStationID[d.startID].weekdayRides = mapStationID[d.startID].weekdayRides + 1;
 						}
 
 						if (!(d.stopID in mapStationID)) {
 							mapStationID[d.stopID] = {longitude: d.startLong,latitude: d.startLat, 
-								weekdayStart: 0, weekdayStop: 1, weekendStart:0, weekendStop: 0, id: d.startID, name: d.startName };
+								weekdayRides: 1, weekendRides: 0, id: d.startID, name: d.startName };
 						}
 						
 						else {
-							mapStationID[d.stopID].weekdayStop = mapStationID[d.stopID].weekdayStop + 1;
+							mapStationID[d.stopID].weekdayRides = mapStationID[d.stopID].weekdayRides + 1;
 						}
 				}
 				// Weekend Trip
@@ -86,20 +86,20 @@
 
 					if (!(d.startID in mapStationID)) {
 							mapStationID[d.startID] = {longitude: d.startLong,latitude: d.startLat, 
-								weekdayStart: 0, weekdayStop: 0, weekendStart:1, weekendStop: 0, id: d.startID, name: d.startName };
+								weekdayRides: 0, weekendRides: 1, id: d.startID, name: d.startName };
 						}
 
 						else {
-							mapStationID[d.startID].weekendStart = mapStationID[d.startID].weekendStart + 1;
+							mapStationID[d.startID].weekendRides = mapStationID[d.startID].weekendRides + 1;
 						}
 
 						if (!(d.stopID in mapStationID)) {
 							mapStationID[d.stopID] = {longitude: d.startLong,latitude: d.startLat, 
-								weekdayStart: 0, weekdayStop: 0, weekendStart:0, weekendStop: 1, id: d.startID, name: d.startName };
+								weekdayRides: 0, weekendRides: 1, id: d.startID, name: d.startName };
 						}
 						
 						else {
-							mapStationID[d.stopID].weekendStop = mapStationID[d.stopID].weekendStop + 1;
+							mapStationID[d.stopID].weekendRides = mapStationID[d.stopID].weekendRides + 1;
 						}
 				}
 			}
@@ -112,15 +112,11 @@
 			}	
 
 		for ( var station in mapStationID){
-			mapStationID[station].weekdayStart = mapStationID[station].weekdayStart / 5.0;
-			mapStationID[station].weekdayStop = mapStationID[station].weekdayStop / 5.0;
+			mapStationID[station].weekdayRides = mapStationID[station].weekdayRides / 5.0;
 
-			mapStationID[station].weekendStart = mapStationID[station].weekendStart / 2.0;
-			mapStationID[station].weekendStop = mapStationID[station].weekendStop / 2.0;
-
+			mapStationID[station].weekendRides = mapStationID[station].weekendRides / 2.0;
 		}
 	});
-
 	</script>
 </body>
 
