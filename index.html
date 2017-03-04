@@ -11,10 +11,17 @@
 	var bikeData ;
 
 	var weekendTrips = [];
-	var weekdayTrip = [];
+	var weekdayTrips = [];
+
+	for (i = 0; i<20; i++) {
+		weekendTrips.push(0);
+		weekdayTrips.push(0);
+	}
+
+	var weekendTotalTrips;
+	var weekdayTotalTrips;
 
 	var mapStationId = {};
-
 
 
 	function parseLine(line) {
@@ -35,21 +42,34 @@
 
 	}
 
-	d3.csv("citibike0916.csv", parseLine, function(error,data){
-		bikeData = data;
-		
+	d3.csv("data.csv", parseLine, function(error,data){
+		bikeData = data;		
 		bikeData.forEach(function (d) {
-			// Weekday Trip
-			if (d.startTime.getDay() >= 1 && d.startTime.getDay() <= 5) {
+
+			hour = d.startTime.getHours();
+
+			// Get trip data between 6am - 1am
+			if (hour != 2 && hour != 3 && hour != 4 && hour !=5) {
+
+				// Create index for each hour
+				hour = hour - 6;
+				if (hour >= 0 && hour <= 1) { 
+					hour = hour + 24;
+				}
+
+
+				// Weekday Trip
+				if (d.startTime.getDay() >= 1 && d.startTime.getDay() <= 5) {
+						weekdayTrips[hour] = weekdayTrips[hour] + 1;
+				}
+
+				else {
+					weekendTrips[hour] = weekendTrips[hour] + 1;
+				}
 			}
-			// Weekend Trip
-			else {
-
-			}
-
-
 		});
 	});
+
 
 	</script>
 </body>
