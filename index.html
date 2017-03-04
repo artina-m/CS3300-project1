@@ -13,7 +13,8 @@
 	var weekendTrips = [];
 	var weekdayTrip = [];
 
-	var mapSationId = {};
+	var mapStationId = {};
+
 
 
 	function parseLine(line) {
@@ -31,13 +32,23 @@
 		stopLat: Number(line["end station latitude"]),
 		stopLong: Number(line["end station longitude"])
 	};
-	
+
 	}
 
 	d3.csv("citibike0916.csv", parseLine, function(error,data){
 		bikeData = data;
+		
+		bikeData.forEach(function (d) {
+			// Weekday Trip
+			if (d.startTime.getDay() >= 1 && d.startTime.getDay() <= 5) {
+			}
+			// Weekend Trip
+			else {
+
+			}
 
 
+		});
 	});
 
 	</script>
