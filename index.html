@@ -10,25 +10,24 @@
 	<script>
 	var bikeData ;
 
-	var weekendTrips = [];
-	var weekdayTrips = [];
+	var weekendTrips = []; // Array of average number of trips on a weekend day from 6am to 1am
+	var weekdayTrips = []; // Array of average number of trips on a weekday from 6am to 1am
 
 	for (i = 0; i<20; i++) {
 		weekendTrips.push(0);
 		weekdayTrips.push(0);
 	}
 
-	var weekendTotalTrips = 0 ;
-	var weekdayTotalTrips = 0;
+	var weekendTotalTrips = 0 ; // Total trips during the weekends
+	var weekdayTotalTrips = 0;  // Total trips during the weekdays
 
-	var mapStationID = {};
+	var mapStationID = {}; 		// Object of stations: longitude, latitude, weekday rides, weekend rides, id and name
 
-	var minWeekday = Number.MAX_SAFE_INTEGER;
-	var maxWeekday = Number.MIN_SAFE_INTEGER;
+	var minWeekday = Number.MAX_SAFE_INTEGER;  // Minimum weekday rides
+	var maxWeekday = Number.MIN_SAFE_INTEGER;  // Maximum weekday rides
 
-	var minWeekend = Number.MAX_SAFE_INTEGER;
-	var maxWeekend = Number.MIN_SAFE_INTEGER;
-
+	var minWeekend = Number.MAX_SAFE_INTEGER;  // Minimum weekend rides
+	var maxWeekend = Number.MIN_SAFE_INTEGER;  // Maximum weekend rides
 
 	function parseLine(line) {
 		return {
@@ -41,11 +40,10 @@
 		startLong: Number(line["start station longitude"]),
 
 		stopID: line["end station id"],
-		endName: line["end station name"],
+		stopName: line["end station name"],
 		stopLat: Number(line["end station latitude"]),
 		stopLong: Number(line["end station longitude"])
 	};
-
 	}
 
 	d3.csv("data.csv", parseLine, function(error,data){
@@ -58,67 +56,68 @@
 			if (hour != 2 && hour != 3 && hour != 4 && hour !=5) {
 
 				// Create index for each hour
-				if (hour >= 0 && hour <= 1) { 
-					hour = hour + 24;
-				}
+				if (hour >= 0 && hour <= 1) { hour = hour + 24; }
 				hour = hour - 6;
 
 				// Weekday Trip
+				// Update total trips and trips during this hour
+				// Find every unique station, keep track of station data 
+				// and how many times each station is visited
 				if (d.startTime.getDay() >= 1 && d.startTime.getDay() <= 5) {
-						weekdayTrips[hour] = weekdayTrips[hour] + 1;
-						weekdayTotalTrips  = weekdayTotalTrips + 1;
 
-						if (!(d.startID in mapStationID)) {
-							mapStationID[d.startID] = {longitude: d.startLong,latitude: d.startLat, 
-								weekdayRides: 1, weekendRides: 0,id: d.startID, name: d.startName };
-						}
+					weekdayTrips[hour] = weekdayTrips[hour] + 1;
+					weekdayTotalTrips  = weekdayTotalTrips + 1;
 
-						else {
-							mapStationID[d.startID].weekdayRides = mapStationID[d.startID].weekdayRides + 1;
-						}
+					if (!(d.startID in mapStationID)) {
+						mapStationID[d.startID] = {longitude: d.startLong,latitude: d.startLat, 
+							weekdayRides: 1, weekendRides: 0,id: d.startID, name: d.startName };
+					}
+					else {  mapStationID[d.startID].weekdayRides = mapStationID[d.startID].weekdayRides + 1; }
 
-						if (!(d.stopID in mapStationID)) {
-							mapStationID[d.stopID] = {longitude: d.startLong,latitude: d.startLat, 
-								weekdayRides: 1, weekendRides: 0, id: d.startID, name: d.startName };
-						}
-						
-						else {
-							mapStationID[d.stopID].weekdayRides = mapStationID[d.stopID].weekdayRides + 1;
-						}
+					if (!(d.stopID in mapStationID)) {
+						mapStationID[d.stopID] = {longitude: d.stopLong,latitude: d.stopLat, 
+							weekdayRides: 1, weekendRides: 0, id: d.stopID, name: d.stopName };
+					}
+					
+					else { mapStationID[d.stopID].weekdayRides = mapStationID[d.stopID].weekdayRides + 1;
+					}
 				}
+
 				// Weekend Trip
+				// Update total trips and trips during this hour
+				// Find every unique station, keep track of station data 
+				// and how many times each station is visited
 				else {
+
 					weekendTrips[hour] = weekendTrips[hour] + 1;
 					weekendTotalTrips  = weekendTotalTrips + 1;
 
 					if (!(d.startID in mapStationID)) {
-							mapStationID[d.startID] = {longitude: d.startLong,latitude: d.startLat, 
-								weekdayRides: 0, weekendRides: 1, id: d.startID, name: d.startName };
-						}
+						mapStationID[d.startID] = {longitude: d.startLong,latitude: d.startLat, 
+							weekdayRides: 0, weekendRides: 1, id: d.startID, name: d.startName };
+					}
 
-						else {
-							mapStationID[d.startID].weekendRides = mapStationID[d.startID].weekendRides + 1;
-						}
+					else { mapStationID[d.startID].weekendRides = mapStationID[d.startID].weekendRides + 1;
+					}
 
-						if (!(d.stopID in mapStationID)) {
-							mapStationID[d.stopID] = {longitude: d.startLong,latitude: d.startLat, 
-								weekdayRides: 0, weekendRides: 1, id: d.startID, name: d.startName };
-						}
+					if (!(d.stopID in mapStationID)) {
+						mapStationID[d.stopID] = {longitude: d.stopLong,latitude: d.stopLat, 
+							weekdayRides: 0, weekendRides: 1, id: d.stopID, name: d.stopName };
+					}
 						
-						else {
-							mapStationID[d.stopID].weekendRides = mapStationID[d.stopID].weekendRides + 1;
-						}
+					else { mapStationID[d.stopID].weekendRides = mapStationID[d.stopID].weekendRides + 1;
+					}
 				}
 			}
 		});
 
-		// Find average trips per day
+		// Find average total trips per day at every hour
 		for(i = 0; i<20; i ++) {
 			weekdayTrips[i] = weekdayTrips[i] / 5.0;
 			weekendTrips[i] = weekendTrips[i] / 2.0;
 			}	
 
-		
+		// Find average number of trips per station
 		for ( var station in mapStationID){
 			mapStationID[station].weekdayRides = mapStationID[station].weekdayRides / 5.0;
 			mapStationID[station].weekendRides = mapStationID[station].weekendRides / 2.0;
@@ -127,10 +126,8 @@
 			maxWeekday = Math.max(maxWeekday, mapStationID[station].weekdayRides); // 1445.4
 			minWeekend = Math.min(minWeekend,mapStationID[station].weekendRides );  // 0
 			maxWeekend = Math.max(maxWeekend, mapStationID[station].weekendRides);  // 1003.5
-
 		}
 	});
-
 	</script>
 </body>
 
