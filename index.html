@@ -1,25 +1,23 @@
 <!DOCTYPE html>
 <html>
-<style>
-    #boroughs {
-        stroke: #1f2121;
-        stroke-width: 2px;
-        fill: #4d4d4d;
-    }
-    body {
-        background-color: #1f2121;
-    }
-</style>
 <head>
     <title>CS 3300 Project 1</title>
     <script src="https://d3js.org/d3.v4.min.js"></script>
-
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Roboto:Thin,Regular');
+        #boroughs {
+            stroke: #1f2121;
+            stroke-width: 2px;
+            fill: #111011;
+        }   
+        body { background-color: #1f2121; }
+    </style>
 </head>
-<!-- json file pulled from: http://catalog.civicdashboards.com/dataset/11fd957a-8885-42ef-aa49-5c879ec93fac/resource/28377e88-8a50-428f-807c-40ba1f09159b/download/nyc-zip-code-tabulation-areas-polygons.geojson-->
-<!-- graphing code referenced from http://bl.ocks.org/phil-pedruco/6646844-->
-<!-- color gradient coding tutorial referenced from https://www.visualcinnamon.com/2016/05/smooth-color-legend-d3-svg-gradient.html-->
-<!--http://stackoverflow.com/questions/20142951/how-to-set-the-background-color-of-a-d3-js-svg-->
+
 <body  background-color="grey">
+<br>
+<p id = "maps">
+
     <script>
     var bikeData ;
 
@@ -41,6 +39,10 @@
 
     var minWeekend = Number.MAX_SAFE_INTEGER;  // Minimum weekend rides
     var maxWeekend = Number.MIN_SAFE_INTEGER;  // Maximum weekend rides
+
+    var weekdayColor = "#F94C5A"
+    var weekendColor = "#6739CA"
+
 
     function parseLine(line) {
         return {
@@ -141,12 +143,14 @@
             maxWeekend = Math.max(maxWeekend, mapStationID[station].weekendRides);  // 1003.5
         }
 
+        // Build Map
         var width = 450,
             height = 580;
 
-        var svg0 = d3.select("body").append("svg")
+        var svg0 = d3.select("#maps").append("svg")
             .attr("width", 350)
             .attr("height", height);
+        
 
         svg0.append("text")
             .text("A Day in the Life of NYC")
@@ -154,7 +158,7 @@
             .attr("y", 50)
             .attr("font-size", "30px")
             .style("font-family", "arial")
-            .attr("fill", "#4d4d4d");
+            .attr("fill", "lightGrey");
 
         svg0.append("text")
             .text("through CitiBike Rides")
@@ -162,7 +166,7 @@
             .attr("y", 100)
             .attr("font-size", "30px")
             .style("font-family", "arial")
-            .attr("fill", "#4d4d4d");
+            .attr("fill", "lightGrey");
 
         svg0.append("text")
             .text("The popularity of Citibike Stations, marked with")
@@ -186,7 +190,7 @@
             .style("font-family", "arial")
             .attr("fill", "#4d4d4d");
 
-        var svg1 = d3.select("body").append("svg")
+        var svg1 = d3.select("#maps").append("svg")
             .attr("width", width)
             .attr("height", height);
 
@@ -209,7 +213,11 @@
             .style("font-family", "arial")
             .attr("fill", "#E74C3C");
 
-        var svg2 = d3.select("body").append("svg")
+        var svgbuffer = d3.select("#maps").append("svg")
+            .attr("width", 50)
+            .attr("height", height);
+
+        var svg2 = d3.select("#maps").append("svg")
             .attr("width", width)
             .attr("height", height);
 
@@ -223,16 +231,14 @@
             .attr("fill", "#4d4d4d")
         ;
 
-
-
         d3.json("nyc.geojson", function(error, nyb) {
 
             console.log(nyb)
 
             var projection = d3.geoMercator()
                 .center([-73.94, 40.70])
-                .scale(150000)
-                .translate([(width) / 2 + 50, (height)/2+135]);
+                .scale(210000)
+                .translate([(width) / 2 + 100, (height)/2+200]);
 
             var path = d3.geoPath()
                 .projection(projection);
@@ -276,22 +282,21 @@
 
 
             var color_weekday = d3.scaleLinear()
-                .domain([10, 800])
-                .range(["#1F618D", "#E74C3C"]);
+                .domain([-300,0, 300])
+                .range(["#0D15DB","#8030F5","#FBFF78 "]);
 
             var size_weekday = d3.scaleSqrt()
-                .domain([10, 800])
-                .range([1, 13]);
-
+                .domain([50, 600])
+                .range([1, 5]);
 
 
             var color_weekend = d3.scaleLinear()
-                .domain([10, 750])
-                .range(["#1F618D", "#E74C3C"]);
+                .domain([-200,0, 200])
+                .range(["#0D15DB","#8030F5","#FBFF78"]);
 
             var size_weekend = d3.scaleSqrt()
-                .domain([10, 750])
-                .range([1, 13]);
+                .domain([50, 500])
+                .range([1, 5]);
 
 
             //Color gradient bar tutorial from https://www.visualcinnamon.com/2016/05/smooth-color-legend-d3-svg-gradient.html
@@ -301,25 +306,24 @@
 
             linearGradient.append("stop") 
                 .attr("offset", "0")   
-                .attr("stop-color", "#1F618D"); // Blue
+                .attr("stop-color", "#0D15DB"); // Blue
+
+            linearGradient.append("stop") 
+                .attr("offset", "50")   
+                .attr("stop-color", "#FBFF78"); // Red
 
             linearGradient.append("stop") 
                 .attr("offset", "100")   
-                .attr("stop-color", "#E74C3C"); // Red
+                .attr("stop-color", "#FBFF78"); // Blue
 
-            g1.append("rect")
-                .attr("x", 300)
+
+            svg0.append("rect")
+                .attr("x", 100)
                 .attr("y", 540)
                 .attr("width", 100)
                 .attr("height", 20)
                 .style("fill", "url(#linGradient)");
 
-            g2.append("rect")
-                .attr("x", 300)
-                .attr("y", 540)
-                .attr("width", 100)
-                .attr("height", 20)
-                .style("fill", "url(#linGradient)");
 
             //Loop through all stations 
             for (var station in mapStationID){
@@ -327,64 +331,269 @@
                 var lat = mapStationID[station].latitude;
                 var weekday_popularity = mapStationID[station].weekdayRides;
                 var weekend_popularity = mapStationID[station].weekendRides;
-                if (weekday_popularity > 800) {
+
+                var netFlowWeekday = weekday_popularity - weekend_popularity;
+                var netFlowWeekend = weekend_popularity - weekday_popularity;
+
+                if (netFlowWeekday > 300) {
                     g1.append("circle")
                     .attr("cx", projection([lon,lat])[0])
                     .attr("cy", projection([lon,lat])[1])
-                    .attr("r", "13px")
-                    .attr("fill", "#E74C3C")
+                    .attr("r", "7px")
+                    .attr("fill", "#FBFF78")
                     .style("opacity", 0.8);
                 }
-                else if (weekday_popularity < 10) {
+
+                else if (netFlowWeekday < -300) {
                     g1.append("circle")
                     .attr("cx", projection([lon,lat])[0])
                     .attr("cy", projection([lon,lat])[1])
                     .attr("r", "1px")
-                    .attr("fill", "#1F618D")
+                    .attr("fill", "#0D15DB")
                     .style("opacity", 0.8);
                 }
+
                 else {
                     g1.append("circle")
                     .attr("cx", projection([lon,lat])[0])
                     .attr("cy", projection([lon,lat])[1])
                     .attr("r", size_weekday(weekday_popularity))
-                    .attr("fill", color_weekday(weekday_popularity))
+                    .attr("fill", color_weekday(netFlowWeekday))
                     .style("opacity", 0.8);
                 }
-                
-                if (weekend_popularity > 750) {
-                    g2.append("circle")
-                    .attr("cx", projection([lon,lat])[0])
-                    .attr("cy", projection([lon,lat])[1])
-                    .attr("r", "13px")
-                    .attr("fill", "#E74C3C")
-                    .style("opacity", 0.8);
-                }
-                else if (weekend_popularity < 10) {
+
+                if (netFlowWeekend < -200) {
                     g2.append("circle")
                     .attr("cx", projection([lon,lat])[0])
                     .attr("cy", projection([lon,lat])[1])
                     .attr("r", "1px")
-                    .attr("fill", "#1F618D")
+                    .attr("fill", "#0D15DB")
                     .style("opacity", 0.8);
                 }
+                else if (netFlowWeekend > 200) {
+                    g2.append("circle")
+                    .attr("cx", projection([lon,lat])[0])
+                    .attr("cy", projection([lon,lat])[1])
+                    .attr("r", "7px")
+                    .attr("fill", "#FBFF78")
+                    .style("opacity", 0.8);
+                }
+
                 else {
                     g2.append("circle")
                     .attr("cx", projection([lon,lat])[0])
                     .attr("cy", projection([lon,lat])[1])
                     .attr("r", size_weekend(weekend_popularity))
-                    .attr("fill", color_weekend(weekend_popularity))
+                    .attr("fill", color_weekend(netFlowWeekend))
                     .style("opacity", 0.8);
                 }
-
             }
         });
 
+        // Plot average number of bike rides per hour during a weekday / weekend day
+        plot(weekdayTrips, weekdayColor);
+        plot(weekendTrips, weekendColor);
+
     });
 
+    </script>
+    </p>
 
+    <p id = "plot"> 
+    <script>
+
+    // Biking Trips During the Day SVG
+    var width = 1400;
+    var height = 600;
+
+    var svg = d3.select("#plot").append("svg")
+        .attr("height", height).attr("width", width);
+
+    // Legends
+    d3.select("svg").append("image")
+    .attr('d', "path")
+    .attr('xlink:href', "bicycleDay.png")
+    .attr("x", width - 130)
+    .attr("y", 200)
+    .attr("width", 50)
+    .attr("height", 50);
+
+    svg.append("text")
+        .attr("x", width - 100)
+        .attr("y", 270)
+        .text("Weekday Trips")
+        .attr("font-size", 18)
+        .attr("fill", weekdayColor)
+        .style("text-anchor", "middle"); 
+
+    d3.select("svg").append("image")
+    .attr('d', "path")
+    .attr('xlink:href', "bicycleEnd.png")
+    .attr("x", width - 130)
+    .attr("y", 300)
+    .attr("width", 50)
+    .attr("height", 50);
+
+    svg.append("text")
+        .attr("x", width - 100)
+        .attr("y", 370)
+        .text("Weekend Trips")
+        .attr("font-size", 18)
+        .attr("fill", weekendColor)
+        .style("text-anchor", "middle"); 
+
+    // Scales for Graph
+    var xScale = d3.scaleLinear()
+        .domain([0,19])
+        .range([200, width-200]);
+
+    var yScale = d3.scaleLinear()
+        .domain([-500,6500])
+        .range([height - (height/4),200]);
+
+    var hours = ["6am", "7am", "8am", "9am", "10am", "11am", "12pm", "1pm", "2pm", "3pm", "4pm", "5pm", "6pm", "7pm", "8pm", "9pm", "10pm", "11pm", "12am", "1am"];
+        
+    var hourAxis = d3.axisBottom(xScale)
+        .tickFormat( function(d,i) { return hours[d]})
+        .ticks(10)
+        .tickSize(0)
+        .tickPadding(20);
+
+    var tripAxis = d3.axisLeft(yScale)
+        .ticks(5)
+        .tickSize(0)
+        .tickPadding(20);
+
+    var plot = svg.append("g");
+
+    plot.attr("class", "plot");
+
+    // Highlight rush hour peaks
+    svg.append("rect")
+    .attr("x", xScale(1))
+    .attr("y", 150)
+    .attr("width", xScale(0) * (1/2))
+    .attr("height", 300)
+    .style("fill","black" )
+    .style("opacity", .2);
+
+    svg.append("rect")
+    .attr("x", xScale(10))
+    .attr("y", 150)
+    .attr("width", xScale(0)* (3/4))
+    .attr("height", 300)
+    .style("fill","black" )
+    .style("opacity", .2);
+
+    // Add axis
+    plot.append("g")
+        .call(tripAxis)
+        .attr("id", "yAxis")
+        .attr("transform", "translate(200,0)")
+        .style("font-size", 14)
+        .selectAll("text")
+        .style("fill", "#5A5A5A");
+
+    plot.append("g")
+        .call(hourAxis)
+        .attr("id", "xAxis")
+        .attr("transform", "translate(0,450)")
+        .style("font-size", 14)
+        .selectAll("text")
+        .style("fill", "#ECF0F1")
+        .style("text-anchor", "start");
+
+    plot.select("#yAxis")
+    .selectAll("path")
+    .style("stroke", "#1F2121");
+
+    plot.select("#xAxis")
+    .selectAll("path")
+    .style("stroke", "#5A5A5A");
+
+    svg.append("line")
+    .attr("x1", 200)
+    .attr("y1", 150 )
+    .attr("x2", width - 200)
+    .attr("y2", 150)
+    .style("stroke-width", 1)
+    .style("stroke","#5A5A5A" );
+
+    plot.append("text")
+        .attr("x", xScale(2))
+        .attr("y", 170)
+        .text("Morning")
+        .attr("font-size", 14)
+        .attr("fill", "white")
+        .style("text-anchor", "middle");
+
+    plot.append("text")
+        .attr("x", xScale(2))
+        .attr("y", 185)
+        .text("Rush Hour")
+        .attr("font-size", 14)
+        .attr("fill", "white")
+        .style("text-anchor", "middle");
+
+    plot.append("text")
+        .attr("x", xScale(11.5))
+        .attr("y", 170)
+        .text("Evening")
+        .attr("font-size", 14)
+        .attr("fill", "white")
+        .style("text-anchor", "middle");
+
+    plot.append("text")
+        .attr("x", xScale(11.5))
+        .attr("y", 185)
+        .text("Rush Hour")
+        .attr("font-size", 14)
+        .attr("fill", "white")
+        .style("text-anchor", "middle");
+
+    plot.append("text")
+        .attr("x", xScale(0))
+        .attr("y", 100)
+        .text("BIKING TRIPS DURING THE DAY")
+        .attr("font-size", 30)
+        .attr("fill", "lightGrey")
+        .style("text-anchor", "right");
+
+    plot.append("text")
+        .attr("class", "mytext")
+        .attr("x", -2*height/3)
+        .attr("y", 100)
+        .text("Average Number of Trips")
+        .attr("font-size", 16)
+        .attr("fill", "#5A5A5A")
+        .attr("transform", "rotate(-90)");
+
+    d3.selectAll("text").style("font-family","Roboto");
 
     </script>
+    </p>
+
+    <script>
+
+    function plot(data,color) {
+        
+        var line = d3.line()
+        .x(function(d,i) {return xScale(i)})
+        .y(function(d,i) {return yScale(d)})
+        .curve(d3.curveBasis);
+
+        svg.append("path")
+        .attr("d", line(data))
+        .attr("stroke", color)
+        .attr("stroke-width", 5)
+        .attr("fill", "none"); 
+    }
+    </script>
 </body>
+
+<!-- json file pulled from: http://catalog.civicdashboards.com/dataset/11fd957a-8885-42ef-aa49-5c879ec93fac/resource/28377e88-8a50-428f-807c-40ba1f09159b/download/nyc-zip-code-tabulation-areas-polygons.geojson-->
+<!-- graphing code referenced from http://bl.ocks.org/phil-pedruco/6646844-->
+<!-- color gradient coding tutorial referenced from https://www.visualcinnamon.com/2016/05/smooth-color-legend-d3-svg-gradient.html-->
+<!--http://stackoverflow.com/questions/20142951/how-to-set-the-background-color-of-a-d3-js-svg-->
 
 </html>
