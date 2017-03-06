@@ -19,6 +19,7 @@
             width: 1440px;
             height:1000;
             background: #272727;
+
     </style>
 </head>
 
@@ -30,6 +31,7 @@
 
 <div id = "topTitle"> 
     <script>
+
     var screenWidth = 1440;
     var screenHeight = 1000;
 
@@ -70,6 +72,14 @@
     .attr("stroke","#F94C5A")
     .attr("stroke-width", 2);
 
+    svgTitle.append("line")
+    .attr("x1", screenWidth-200)
+    .attr("x2", screenWidth -100)
+    .attr("y1", 160)
+    .attr("y2", 160)
+    .attr("stroke","#111011")
+    .attr("stroke-width", 2);
+
     d3.select("svg").append("image")
     .attr('d', "path")
     .attr('xlink:href', "bicycleDay.png")
@@ -80,6 +90,8 @@
 
     </script>
 </div>
+
+
 
 <div id = "maps">
 
@@ -114,16 +126,17 @@
         .range(["#0D15DB","#8030F5","#FBFF78 "]);
 
     var size_weekday = d3.scaleSqrt()
-        .domain([0.4, 1445.4])
-        .range([1, 6]);
+        .domain([50, 600])
+        .range([1, 5]);
 
     var color_weekend = d3.scaleLinear()
         .domain([-200,0, 200])
         .range(["#0D15DB","#8030F5","#FBFF78"]);
 
     var size_weekend = d3.scaleSqrt()
-        .domain([0, 1003.5])
-        .range([1, 6]);
+        .domain([50, 500])
+        .range([1, 5]);
+
 
     function parseLine(line) {
         return {
@@ -223,7 +236,8 @@
             minWeekend = Math.min(minWeekend,mapStationID[station].weekendRides );  // 0
             maxWeekend = Math.max(maxWeekend, mapStationID[station].weekendRides);  // 1003.5
         }
-        
+
+
         d3.json("nyc.geojson", function(error, nyb) {
 
             console.log(nyb)
@@ -231,7 +245,7 @@
             var projection = d3.geoMercator()
                 .center([-73.94, 40.70])
                 .scale(180000)
-                .translate([(width/2 - 350), (height)/2+180]);
+                .translate([(width/2 - 150), (height)/2+180]);
 
             var path = d3.geoPath()
                 .projection(projection);
@@ -279,6 +293,7 @@
                 .attr("width", 100)
                 .attr("height", 20)
                 .style("fill", "url(#linGradient)");
+
 
             //Loop through all stations 
             for (var station in mapStationID){
@@ -354,27 +369,39 @@
 
     <script>
 
-        var svgVerticalBuffer1 = d3.select("#maps").append("svg")
-            .attr("width", 150)
-            .attr("height", height);
-
-        var width = 500,
+        var width = 650,
             height = 550;
 
         var svg1 = d3.select("#maps").append("svg")
             .attr("width", width)
             .attr("height", height);
 
-        var svgbuffer = d3.select("#maps").append("svg")
-            .attr("width", 50)
-            .attr("height", height);
+        svg1.append("text")
+        .attr("x", 60)
+        .attr("y", 30 )
+        .text("Weekday")
+        .style("font-family", "Roboto")
+        .style("font-weight", 200)
+        .style("font-size", 40)
+        .style("fill", "grey");
+
 
         var svg2 = d3.select("#maps").append("svg")
             .attr("width", width)
             .attr("height", height);
 
+        svg2.append("text")
+        .attr("x", 60)
+        .attr("y", 30 )
+        .text("Weekend")
+        .style("font-family", "Roboto")
+        .style("font-weight", 200)
+        .style("font-size", 40)
+        .style("fill", "grey");
+
     </script>
     </div>
+
 
     <p id = "plot"> 
     <script>
