@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script>
+function parseLine2(line) {
+return {
+year: Number(line["Year"]),
+first: new Date(line["50th and First Sep Bike Count"]),
+madison: line["50th and Madison Sep Bike Count"],
+broadway: line["50th and Broadway Sep Bike Count"],
+hudson: Number(line["50th and Hudson Sep Bike Count"]),
+total: Number(line["Total 50th ave sep"])
+};}
+
+var totalData;
+
+d3.csv("totalBikers.csv", parseLine2, function(error,data) {
+    totalData = data;
+});
+</script>
+
+</body>
+</html>
