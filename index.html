@@ -114,16 +114,16 @@
         .range(["#0D15DB","#8030F5","#FBFF78 "]);
 
     var size_weekday = d3.scaleSqrt()
-        .domain([50, 600])
-        .range([1, 5]);
+        .domain([0.4, 1445.4])
+        .range([1, 6]);
 
     var color_weekend = d3.scaleLinear()
         .domain([-200,0, 200])
         .range(["#0D15DB","#8030F5","#FBFF78"]);
 
     var size_weekend = d3.scaleSqrt()
-        .domain([50, 500])
-        .range([1, 5]);
+        .domain([0, 1003.5])
+        .range([1, 6]);
 
     function parseLine(line) {
         return {
