@@ -10,19 +10,15 @@
             stroke-width: 2px;
             fill: #111011;
         }   
-
         #maps { white-space: nowrap; }
-
         body {
             margin: 0;
             padding: 0;
         }
-
         .visualization {
             width: 1440px;
             height:1000;
             background: #272727;
-
     </style>
 </head>
 
@@ -59,6 +55,13 @@
             .style("font-family", "arial")
             .attr("fill", "#7A7A7A");
 
+    d3.select("svg").append("image")
+    .attr("d", "path")
+    .attr("xlink:href", "skyline.png")
+    .attr("x", screenWidth - 600)
+    .attr("y", -50)
+    .attr("width", 500);
+
     svgTitle.append("line")
     .attr("x1", 60)
     .attr("x2", screenWidth -200)
@@ -68,8 +71,8 @@
     .attr("stroke-width", 2);
 
     d3.select("svg").append("image")
-    .attr("d", "path")
-    .attr("xlink:href", "bicycleDay.png")
+    .attr('d', "path")
+    .attr('xlink:href', "bicycleDay.png")
     .attr("x", screenWidth - 190)
     .attr("y", 115)
     .attr("width", 50)
@@ -105,6 +108,22 @@
     var weekdayColor = "#F94C5A";
     var weekendColor = "#6739CA";
 
+    // Scales
+    var color_weekday = d3.scaleLinear()
+        .domain([-300,0, 300])
+        .range(["#0D15DB","#8030F5","#FBFF78 "]);
+
+    var size_weekday = d3.scaleSqrt()
+        .domain([50, 600])
+        .range([1, 5]);
+
+    var color_weekend = d3.scaleLinear()
+        .domain([-200,0, 200])
+        .range(["#0D15DB","#8030F5","#FBFF78"]);
+
+    var size_weekend = d3.scaleSqrt()
+        .domain([50, 500])
+        .range([1, 5]);
 
     function parseLine(line) {
         return {
@@ -204,8 +223,7 @@
             minWeekend = Math.min(minWeekend,mapStationID[station].weekendRides );  // 0
             maxWeekend = Math.max(maxWeekend, mapStationID[station].weekendRides);  // 1003.5
         }
-
-
+        
         d3.json("nyc.geojson", function(error, nyb) {
 
             console.log(nyb)
@@ -237,25 +255,6 @@
                 .attr("class", function(d){ return d.properties.name; })
                 .attr("d", path)
 
-
-            var color_weekday = d3.scaleLinear()
-                .domain([-300,0, 300])
-                .range(["#0D15DB","#8030F5","#FBFF78 "]);
-
-            var size_weekday = d3.scaleSqrt()
-                .domain([50, 600])
-                .range([1, 5]);
-
-
-            var color_weekend = d3.scaleLinear()
-                .domain([-200,0, 200])
-                .range(["#0D15DB","#8030F5","#FBFF78"]);
-
-            var size_weekend = d3.scaleSqrt()
-                .domain([50, 500])
-                .range([1, 5]);
-
-
             //Color gradient bar tutorial from https://www.visualcinnamon.com/2016/05/smooth-color-legend-d3-svg-gradient.html
             var definitions = svg1.append("defs");
             var linearGradient = definitions.append("linearGradient")
@@ -280,7 +279,6 @@
                 .attr("width", 100)
                 .attr("height", 20)
                 .style("fill", "url(#linGradient)");
-
 
             //Loop through all stations 
             for (var station in mapStationID){
@@ -377,7 +375,6 @@
 
     </script>
     </div>
-    </p>
 
     <p id = "plot"> 
     <script>
