@@ -45,16 +45,17 @@
             .attr("x", 60)
             .attr("y", 100)
             .attr("font-size", "42px")
-            .style("font-family", "arial")
-            .attr("fill", "lightGrey")
-            .style("text-anchor", "right");
+            .style("font-family", "Roboto")
+            .style("font-weight", 200)
+            .style("text-anchor", "right")
+            .attr("fill", "white");
 
     svgTitle.append("text")
             .text("The popularity of a Citi Bike station varies from weekday to weekend.")
             .attr("x", 60)
             .attr("y", 140)
             .attr("font-size", "15px")
-            .style("font-family", "arial")
+            .style("font-family", "Roboto")
             .attr("fill", "#7A7A7A");
 
     d3.select("svg").append("image")
@@ -91,8 +92,6 @@
     </script>
 </div>
 
-
-
 <div id = "maps">
 
     <script>
@@ -126,17 +125,16 @@
         .range(["#0D15DB","#8030F5","#FBFF78 "]);
 
     var size_weekday = d3.scaleSqrt()
-        .domain([50, 600])
-        .range([1, 5]);
+        .domain([0.4, 1445.4])
+        .range([1, 6]);
 
     var color_weekend = d3.scaleLinear()
         .domain([-200,0, 200])
         .range(["#0D15DB","#8030F5","#FBFF78"]);
 
     var size_weekend = d3.scaleSqrt()
-        .domain([50, 500])
-        .range([1, 5]);
-
+        .domain([0, 1003.5])
+        .range([1, 6]);
 
     function parseLine(line) {
         return {
@@ -197,7 +195,6 @@
                 // Find every unique station, keep track of station data 
                 // and how many times each station is visited
                 else {
-
                     weekendTrips[hour] = weekendTrips[hour] + 1;
                     weekendTotalTrips  = weekendTotalTrips + 1;
 
@@ -236,7 +233,6 @@
             minWeekend = Math.min(minWeekend,mapStationID[station].weekendRides );  // 0
             maxWeekend = Math.max(maxWeekend, mapStationID[station].weekendRides);  // 1003.5
         }
-
 
         d3.json("nyc.geojson", function(error, nyb) {
 
@@ -293,7 +289,6 @@
                 .attr("width", 100)
                 .attr("height", 20)
                 .style("fill", "url(#linGradient)");
-
 
             //Loop through all stations 
             for (var station in mapStationID){
@@ -385,7 +380,6 @@
         .style("font-size", 40)
         .style("fill", "grey");
 
-
         var svg2 = d3.select("#maps").append("svg")
             .attr("width", width)
             .attr("height", height);
@@ -402,50 +396,49 @@
     </script>
     </div>
 
+    <div id = "plot"> 
 
-    <p id = "plot"> 
     <script>
+    // Create bottom graph: Average weekday trips per hour vs weekend trips
 
-    // Create bottom graph
-    // Biking Trips During the Day SVG
-    var width = 1400;
+    var width = screenWidth;
     var height = 600;
 
     var svg = d3.select("#plot").append("svg")
+        .attr("class", "plot1")
         .attr("height", height).attr("width", width);
 
-    // Legends
-    d3.select("svg").append("image")
+    // Weekday Legend
+    d3.select(".plot1").append("image")
     .attr('d', "path")
     .attr('xlink:href', "bicycleDay.png")
-    .attr("x", width - 130)
-    .attr("y", 200)
-    .attr("width", 50)
-    .attr("height", 50);
+    .attr("x", 60)
+    .attr("y", 120)
+    .attr("width", 30);
 
     svg.append("text")
-        .attr("x", width - 100)
-        .attr("y", 270)
+        .attr("x", 100)
+        .attr("y", 145)
         .text("Weekday Trips")
         .attr("font-size", 18)
         .attr("fill", weekdayColor)
-        .style("text-anchor", "middle"); 
+        .style("text-anchor", "right"); 
 
-    d3.select("svg").append("image")
+    // Weekend Legend
+    d3.select(".plot1").append("image")
     .attr('d', "path")
     .attr('xlink:href', "bicycleEnd.png")
-    .attr("x", width - 130)
-    .attr("y", 300)
-    .attr("width", 50)
-    .attr("height", 50);
+    .attr("x", 250)
+    .attr("y", 120)
+    .attr("width", 30);
 
     svg.append("text")
-        .attr("x", width - 100)
-        .attr("y", 370)
+        .attr("x", 290)
+        .attr("y", 145)
         .text("Weekend Trips")
         .attr("font-size", 18)
         .attr("fill", weekendColor)
-        .style("text-anchor", "middle"); 
+        .style("text-anchor", "right"); 
 
     // Scales for Graph
     var xScale = d3.scaleLinear()
@@ -476,25 +469,25 @@
     // Highlight rush hour peaks
     svg.append("rect")
     .attr("x", xScale(1))
-    .attr("y", 150)
+    .attr("y", 200)
     .attr("width", xScale(0) * (1/2))
     .attr("height", 300)
     .style("fill","black" )
-    .style("opacity", .2);
+    .style("opacity", .1);
 
     svg.append("rect")
     .attr("x", xScale(10))
-    .attr("y", 150)
+    .attr("y", 200)
     .attr("width", xScale(0)* (3/4))
     .attr("height", 300)
     .style("fill","black" )
-    .style("opacity", .2);
+    .style("opacity", .1);
 
-    // Add axis
+    // Add Axis
     plot.append("g")
         .call(tripAxis)
         .attr("id", "yAxis")
-        .attr("transform", "translate(200,0)")
+        .attr("transform", "translate(200,50)")
         .style("font-size", 14)
         .selectAll("text")
         .style("fill", "#5A5A5A");
@@ -502,7 +495,7 @@
     plot.append("g")
         .call(hourAxis)
         .attr("id", "xAxis")
-        .attr("transform", "translate(0,450)")
+        .attr("transform", "translate(0,500)")
         .style("font-size", 14)
         .selectAll("text")
         .style("fill", "#ECF0F1")
@@ -510,7 +503,7 @@
 
     plot.select("#yAxis")
     .selectAll("path")
-    .style("stroke", "#1F2121");
+    .style("stroke", "#272727");
 
     plot.select("#xAxis")
     .selectAll("path")
@@ -518,15 +511,15 @@
 
     svg.append("line")
     .attr("x1", 200)
-    .attr("y1", 150 )
+    .attr("y1", 200 )
     .attr("x2", width - 200)
-    .attr("y2", 150)
+    .attr("y2", 200)
     .style("stroke-width", 1)
     .style("stroke","#5A5A5A" );
 
     plot.append("text")
         .attr("x", xScale(2))
-        .attr("y", 170)
+        .attr("y",220)
         .text("Morning")
         .attr("font-size", 14)
         .attr("fill", "white")
@@ -534,7 +527,7 @@
 
     plot.append("text")
         .attr("x", xScale(2))
-        .attr("y", 185)
+        .attr("y", 235)
         .text("Rush Hour")
         .attr("font-size", 14)
         .attr("fill", "white")
@@ -542,7 +535,7 @@
 
     plot.append("text")
         .attr("x", xScale(11.5))
-        .attr("y", 170)
+        .attr("y", 220)
         .text("Evening")
         .attr("font-size", 14)
         .attr("fill", "white")
@@ -550,33 +543,35 @@
 
     plot.append("text")
         .attr("x", xScale(11.5))
-        .attr("y", 185)
+        .attr("y", 235)
         .text("Rush Hour")
         .attr("font-size", 14)
         .attr("fill", "white")
         .style("text-anchor", "middle");
 
     plot.append("text")
-        .attr("x", xScale(0))
+        .attr("x", 60)
         .attr("y", 100)
-        .text("BIKING TRIPS DURING THE DAY")
-        .attr("font-size", 30)
-        .attr("fill", "lightGrey")
-        .style("text-anchor", "right");
+        .text("Biking Trips During the Day")
+        .attr("font-size", 40)
+        .attr("fill", "grey")
+        .style("text-anchor", "right")
+        .style("font-family", "Roboto")
+        .style("font-weight", 200);
 
     plot.append("text")
         .attr("class", "mytext")
-        .attr("x", -2*height/3)
+        .attr("x", -2*height/3 - 60)
         .attr("y", 100)
         .text("Average Number of Trips")
-        .attr("font-size", 16)
+        .attr("font-size", 18)
         .attr("fill", "#5A5A5A")
         .attr("transform", "rotate(-90)");
 
     d3.selectAll("text").style("font-family","Roboto");
 
     </script>
-    </p>
+    </div>
 
     <script>
 
@@ -591,7 +586,8 @@
         .attr("d", line(data))
         .attr("stroke", color)
         .attr("stroke-width", 5)
-        .attr("fill", "none"); 
+        .attr("fill", "none")
+        .attr("transform", "translate(0,50)"); 
     }
     </script>
 </div>
