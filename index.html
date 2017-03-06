@@ -21,7 +21,7 @@
         .visualization {
             width: 1440px;
             height:1000;
-            background: #1F2121;
+            background: #272727;
 
     </style>
 </head>
@@ -43,7 +43,7 @@
         .attr("height", 200);
 
     svgTitle.append("text")
-            .text("CitiBike Trip Visualization")
+            .text("Citi Bike Trip Visualization")
             .attr("x", 60)
             .attr("y", 100)
             .attr("font-size", "42px")
@@ -52,12 +52,12 @@
             .style("text-anchor", "right");
 
     svgTitle.append("text")
-            .text("The popularity of Citibike Stations, marked with circles, varies with the day- highlighting the activity")
+            .text("The popularity of a Citi Bike station varies from weekday to weekend.")
             .attr("x", 60)
             .attr("y", 140)
             .attr("font-size", "15px")
             .style("font-family", "arial")
-            .attr("fill", "#4d4d4d");
+            .attr("fill", "#7A7A7A");
 
     svgTitle.append("line")
     .attr("x1", 60)
@@ -68,8 +68,8 @@
     .attr("stroke-width", 2);
 
     d3.select("svg").append("image")
-    .attr('d', "path")
-    .attr('xlink:href', "bicycleDay.png")
+    .attr("d", "path")
+    .attr("xlink:href", "bicycleDay.png")
     .attr("x", screenWidth - 190)
     .attr("y", 115)
     .attr("width", 50)
