@@ -2,9 +2,12 @@
 <html>
 <style>
     #boroughs {
-        stroke: grey;
+        stroke: #1f2121;
         stroke-width: 2px;
-        fill: white;
+        fill: #4d4d4d;
+    }
+    body {
+        background-color: #1f2121;
     }
 </style>
 <head>
@@ -15,8 +18,8 @@
 <!-- json file pulled from: http://catalog.civicdashboards.com/dataset/11fd957a-8885-42ef-aa49-5c879ec93fac/resource/28377e88-8a50-428f-807c-40ba1f09159b/download/nyc-zip-code-tabulation-areas-polygons.geojson-->
 <!-- graphing code referenced from http://bl.ocks.org/phil-pedruco/6646844-->
 <!-- color gradient coding tutorial referenced from https://www.visualcinnamon.com/2016/05/smooth-color-legend-d3-svg-gradient.html-->
-
-<body>
+<!--http://stackoverflow.com/questions/20142951/how-to-set-the-background-color-of-a-d3-js-svg-->
+<body  background-color="grey">
     <script>
     var bikeData ;
 
@@ -138,21 +141,89 @@
             maxWeekend = Math.max(maxWeekend, mapStationID[station].weekendRides);  // 1003.5
         }
 
-        
         var width = 450,
             height = 580;
 
         var svg0 = d3.select("body").append("svg")
-            .attr("width", 300)
+            .attr("width", 350)
             .attr("height", height);
+
+        svg0.append("text")
+            .text("A Day in the Life of NYC")
+            .attr("x", 10)
+            .attr("y", 50)
+            .attr("font-size", "30px")
+            .style("font-family", "arial")
+            .attr("fill", "#4d4d4d");
+
+        svg0.append("text")
+            .text("through CitiBike Rides")
+            .attr("x", 10)
+            .attr("y", 100)
+            .attr("font-size", "30px")
+            .style("font-family", "arial")
+            .attr("fill", "#4d4d4d");
+
+        svg0.append("text")
+            .text("The popularity of Citibike Stations, marked with")
+            .attr("x", 10)
+            .attr("y", 150)
+            .attr("font-size", "15px")
+            .style("font-family", "arial")
+            .attr("fill", "#4d4d4d");
+        svg0.append("text")
+            .text("circles, varies with the day- highlighting the activity")
+            .attr("x", 10)
+            .attr("y", 170)
+            .attr("font-size", "15px")
+            .style("font-family", "arial")
+            .attr("fill", "#4d4d4d");
+        svg0.append("text")
+            .text("of New York city from work week to weekend.")
+            .attr("x", 10)
+            .attr("y", 190)
+            .attr("font-size", "15px")
+            .style("font-family", "arial")
+            .attr("fill", "#4d4d4d");
 
         var svg1 = d3.select("body").append("svg")
             .attr("width", width)
             .attr("height", height);
 
+        svg1.append("text")
+            .text("Weekday")
+            .attr("transform", "rotate(90)")
+            .attr("x", 150)
+            .attr("y", -390)
+            .attr("font-size", "50px")
+            .style("font-family", "arial")
+            .attr("fill", "#4d4d4d")
+            ;
+
+        svg1.append("text")
+            .text("Midtown: Work Area")
+            .attr("transform", "rotate(-60)")
+            .attr("x", -170)
+            .attr("y", 180)
+            .attr("font-size", "10px")
+            .style("font-family", "arial")
+            .attr("fill", "#E74C3C");
+
         var svg2 = d3.select("body").append("svg")
             .attr("width", width)
             .attr("height", height);
+
+        svg2.append("text")
+            .text("Weekend")
+            .attr("transform", "rotate(90)")
+            .attr("x", 150)
+            .attr("y", -390)
+            .attr("font-size", "50px")
+            .style("font-family", "arial")
+            .attr("fill", "#4d4d4d")
+        ;
+
+
 
         d3.json("nyc.geojson", function(error, nyb) {
 
@@ -185,6 +256,23 @@
                 .enter().append("path")
                 .attr("class", function(d){ return d.properties.name; })
                 .attr("d", path)
+
+            svg2.append("text")
+                .text("Central Park")
+                .attr("transform", "rotate(-60)")
+                .attr("x", -40)
+                .attr("y", 255)
+                .attr("font-size", "10px")
+                .style("font-family", "arial")
+                .attr("fill", "#E74C3C");
+
+            svg2.append("text")
+                .text("Residential Areas")
+                .attr("x", 170)
+                .attr("y", 420)
+                .attr("font-size", "10px")
+                .style("font-family", "arial")
+                .attr("fill", "#E74C3C");
 
 
             var color_weekday = d3.scaleLinear()
