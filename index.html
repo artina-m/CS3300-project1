@@ -17,7 +17,7 @@
         }
         .visualization {
             width: 1440px;
-            height:1000;
+            height:2100px;
             background: #272727;
 
     </style>
@@ -45,7 +45,7 @@
 
     d3.select("svg").append("image")
         .attr("d", "path")
-        .attr("xlink:href", "skyline.png")
+        .attr("xlink:href" , "skyline.png")
         .attr("x", screenWidth - 500)
         .attr("y", -8)
         .attr("width", 400);
@@ -130,7 +130,7 @@
 
     var size_weekday = d3.scaleSqrt()
         .domain([0.4, 1445.4])
-        .range([1, 6]);
+        .range([1, 7]);
 
     var color_weekend = d3.scaleLinear()
         .domain([-200,0, 200])
@@ -138,7 +138,7 @@
 
     var size_weekend = d3.scaleSqrt()
         .domain([0, 1003.5])
-        .range([1, 6]);
+        .range([1, 7]);
 
 
     function parseLine(line) {
@@ -273,7 +273,8 @@
                 .attr("d", path)
 
 
-            //Loop through all stations 
+            // Loop through all stations and add data to map with
+            // using color and size scale
             for (var station in mapStationID){
                 var lon = mapStationID[station].longitude; 
                 var lat = mapStationID[station].latitude;
@@ -284,19 +285,21 @@
                 var netFlowWeekend = weekend_popularity - weekday_popularity;
 
                 if (netFlowWeekday > 300) {
+                    // Outlier
                     g1.append("circle")
                     .attr("cx", projection([lon,lat])[0])
                     .attr("cy", projection([lon,lat])[1])
-                    .attr("r", "7px")
+                    .attr("r", size_weekday(weekday_popularity))
                     .attr("fill", "#FBFF78")
                     .style("opacity", 0.9);
                 }
 
                 else if (netFlowWeekday < -300) {
+                    // Outlier
                     g1.append("circle")
                     .attr("cx", projection([lon,lat])[0])
                     .attr("cy", projection([lon,lat])[1])
-                    .attr("r", "1px")
+                    .attr("r", size_weekday(weekday_popularity))
                     .attr("fill", "#0D15DB")
                     .style("opacity", 0.9);
                 }
@@ -311,18 +314,20 @@
                 }
 
                 if (netFlowWeekend < -200) {
+                    // Outlier
                     g2.append("circle")
                     .attr("cx", projection([lon,lat])[0])
                     .attr("cy", projection([lon,lat])[1])
-                    .attr("r", "1px")
+                    .attr("r", size_weekend(weekend_popularity))
                     .attr("fill", "#0D15DB")
                     .style("opacity", 0.9);
                 }
                 else if (netFlowWeekend > 200) {
+                    // Outlier
                     g2.append("circle")
                     .attr("cx", projection([lon,lat])[0])
                     .attr("cy", projection([lon,lat])[1])
-                    .attr("r", "7px")
+                    .attr("r", size_weekend(weekend_popularity))
                     .attr("fill", "#FBFF78")
                     .style("opacity", 0.9);
                     console.log(mapStationID[station].name);
@@ -499,7 +504,7 @@
     </script>
 
     <script>
-        // SVG for maps
+        // Create svg for maps
         var width = 650,
             height = 550;
 
@@ -507,6 +512,11 @@
             .attr("width", width)
             .attr("height", height);
 
+        var svg2 = d3.select("#maps").append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        // Add titles
         svg1.append("text")
         .attr("x", 60)
         .attr("y", 42 )
@@ -515,11 +525,6 @@
         .style("font-weight", 200)
         .style("font-size", 40)
         .style("fill", "grey");
-
-
-        var svg2 = d3.select("#maps").append("svg")
-            .attr("width", width)
-            .attr("height", height);
 
         svg2.append("text")
         .attr("x", 60)
@@ -530,21 +535,39 @@
         .style("font-size", 40)
         .style("fill", "grey");
 
+
     </script>
     </div>
 
     <div id = "legends">
     <script>
-        // Scale Keys
-        // Color gradient bar tutorial from https://www.visualcinnamon.com/2016/05/smooth-color-legend-d3-svg-gradient.html
+
+        // Create legends/keys for each map
         var svg3 = d3.select("#legends").append("svg")
             .attr("width", width)
-            .attr("height", 100);
+            .attr("height", 80);
 
         var svg4 = d3.select("#legends").append("svg")
             .attr("width", width)
-            .attr("height", 100);
+            .attr("height", 80);
 
+        svg3.append("text")
+        .attr("x", 60)
+        .attr("y", 30 )
+        .text("Total Trips from 9/6/2016")
+        .style("font-family", "Roboto")
+        .style("font-weight", "Bold")
+        .style("fill", "black");
+
+        svg3.append("text")
+        .attr("x", 62)
+        .attr("y", 50 )
+        .text("to 9/12/2016")
+        .style("font-family", "Roboto")
+        .style("font-weight", "Bold")
+        .style("fill", "black");
+
+        // Color gradient bar tutorial from https://www.visualcinnamon.com/2016/05/smooth-color-legend-d3-svg-gradient.html
         var definitions = svg3.append("defs");
         var linearGradient = definitions.append("linearGradient")
             .attr("id", "linGradient");
@@ -564,7 +587,10 @@
         generateKeys(svg3, "Weekday % Weekend");
         generateKeys(svg4, "Weekend % Weekday");
 
+        // Creates a legend at the bottom of each map given an svg map and a ratio title
         function generateKeys(mySvg, ratio) {
+
+            // Color scale key
             mySvg.append("rect")
                 .attr("x", 500)
                 .attr("y", 50)
@@ -579,7 +605,6 @@
                 .text(ratio)
                 .style("fill", "grey")
                 .attr("transform", "translate(0,10)");
-;
 
             mySvg.append("text")
                 .attr("x", 500)
@@ -604,249 +629,251 @@
                 .attr("fill", "#111011")
                 .attr("transform", "translate(641,40),scale(0.1)")
 
+            // Size scale key
             mySvg.append("circle")
-                .attr("cx", 395)
+                .attr("cx", 274)
                 .attr("cy", 45)
-                .attr("r", 4)
+                .attr("r", 2)
                 .style("fill", purpleColor)
-                .attr("transform", "translate(0,10)");
+                .attr("transform", "translate(20,10)");
 
             mySvg.append("text")
-                .attr("x", 350)
+                .attr("x", 270)
                 .attr("y", 20)
                 .text("Station Popularity")
                 .style("font-family", "Roboto")
-                .style("fill", "grey").attr("transform", "translate(0,10)");
+                .style("fill", "grey").attr("transform", "translate(20,10)");
 
             mySvg.append("text")
-                .attr("x", 350)
+                .attr("x", 285)
                 .attr("y", 50)
-                .text("Low")
+                .text("1 Trip")
                 .style("font-family", "Roboto")
                 .style("fill", "grey")
-                .attr("transform", "translate(0,10)");
+                .attr("transform", "translate(20,10)");
 
             mySvg.append("circle")
-                .attr("cx", 460)
+                .attr("cx", 350)
                 .attr("cy", 45)
-                .attr("r", 10)
-                .style("fill", purpleColor).attr("transform", "translate(0,10)");
+                .attr("r", 7)
+                .style("fill", purpleColor).attr("transform", "translate(20,10)");
 
             mySvg.append("text")
-                .attr("x", 410)
+                .attr("x", 370)
                 .attr("y", 50)
-                .text("High")
+                .text("1000+ Trips")
                 .style("font-family", "Roboto")
-                .style("fill", "grey").attr("transform", "translate(0,10)");
-            
+                .style("fill", "grey").attr("transform", "translate(20,10)");
         }
 
     </script>
     </div>
 
-
-        <div id = "plot"> 
-
+    <div id = "plot">
     <script>
-    // Create bottom graph: Average weekday trips per hour vs weekend trips
 
-    var width = screenWidth;
-    var height = 600;
+        // Create first graph: Average weekday trips vs weekend trips at different times of the day
+        var width = screenWidth;
+        var height = 600;
 
-    var svgPlot1 = d3.select("#plot").append("svg")
-        .attr("class", "plot1")
-        .attr("height", height-20).attr("width", width);
+        var svgPlot1 = d3.select("#plot").append("svg")
+            .attr("class", "plot1")
+            .attr("height", height-20).attr("width", width);
 
-    // Weekday Legend
-    d3.select(".plot1").append("image")
-    .attr('d', "path")
-    .attr('xlink:href', "bicycleDay.png")
-    .attr("x", 60)
-    .attr("y", 120)
-    .attr("width", 30);
+        // Scales for Graph
+        var xScale = d3.scaleLinear()
+            .domain([0,19])
+            .range([200, width-200]);
 
-    svgPlot1.append("text")
-        .attr("x", 100)
-        .attr("y", 145)
-        .text("Weekday Trips")
-        .attr("font-size", 18)
-        .attr("fill",pinkColor)
-        .style("text-anchor", "right"); 
+        var yScale = d3.scaleLinear()
+            .domain([-500,6500])
+            .range([height - (height/4),200]);
 
-    // Weekend Legend
-    d3.select(".plot1").append("image")
-    .attr('d', "path")
-    .attr('xlink:href', "bicycleEnd.png")
-    .attr("x", 250)
-    .attr("y", 120)
-    .attr("width", 30);
+        // Hours of interest
+        var hours = ["6am", "7am", "8am", "9am", "10am", "11am", "12pm", "1pm", "2pm", "3pm", "4pm", "5pm", "6pm", "7pm", "8pm", "9pm", "10pm", "11pm", "12am", "1am"];
+            
+       // Create x and y axis
+        var hourAxis = d3.axisBottom(xScale)
+            .tickFormat( function(d,i) { return hours[d]})
+            .ticks(15)
+            .tickSize(0)
+            .tickPadding(20);
 
-    svgPlot1.append("text")
-        .attr("x", 290)
-        .attr("y", 145)
-        .text("Weekend Trips")
-        .attr("font-size", 18)
-        .attr("fill", purpleColor)
-        .style("text-anchor", "right"); 
+        var tripAxis = d3.axisLeft(yScale)
+            .ticks(5)
+            .tickSize(0)
+            .tickPadding(20);
 
-    // Scales for Graph
-    var xScale = d3.scaleLinear()
-        .domain([0,19])
-        .range([200, width-200]);
+        var plot = svgPlot1.append("g");
 
-    var yScale = d3.scaleLinear()
-        .domain([-500,6500])
-        .range([height - (height/4),200]);
+        plot.attr("class", "plot");
 
-    var hours = ["6am", "7am", "8am", "9am", "10am", "11am", "12pm", "1pm", "2pm", "3pm", "4pm", "5pm", "6pm", "7pm", "8pm", "9pm", "10pm", "11pm", "12am", "1am"];
-        
-    var hourAxis = d3.axisBottom(xScale)
-        .tickFormat( function(d,i) { return hours[d]})
-        .ticks(15)
-        .tickSize(0)
-        .tickPadding(20);
+        // Add Axis
+        plot.append("g")
+            .call(tripAxis)
+            .attr("id", "yAxis")
+            .attr("transform", "translate(200,50)")
+            .style("font-size", 14)
+            .selectAll("text")
+            .style("fill", "#5A5A5A");
 
-    var tripAxis = d3.axisLeft(yScale)
-        .ticks(5)
-        .tickSize(0)
-        .tickPadding(20);
+        plot.append("g")
+            .call(hourAxis)
+            .attr("id", "xAxis")
+            .attr("transform", "translate(0,500)")
+            .style("font-size", 14)
+            .selectAll("text")
+            .style("fill", "#ECF0F1")
+            .style("text-anchor", "middle");
 
-    var plot = svgPlot1.append("g");
+        plot.select("#yAxis")
+            .selectAll("path")
+            .style("stroke", "#272727");
 
-    plot.attr("class", "plot");
+        plot.select("#xAxis")
+            .selectAll("path")
+            .style("stroke", "#5A5A5A");
 
-    // Highlight rush hour peaks
-    svgPlot1.append("rect")
-    .attr("x", xScale(1))
-    .attr("y", 200)
-    .attr("width", 3*xScale(0)/5)
-    .attr("height", 300)
-    .style("fill","black" )
-    .style("opacity", .1);
+        plot.append("text")
+            .attr("class", "mytext")
+            .attr("x", -2*height/3 - 60)
+            .attr("y", 100)
+            .text("Average Number of Trips")
+            .attr("font-size", 18)
+            .attr("fill", "#5A5A5A")
+            .attr("transform", "rotate(-90)");
 
-    svgPlot1.append("rect")
-    .attr("x", xScale(10))
-    .attr("y", 200)
-    .attr("width", 4*xScale(0)/5)
-    .attr("height", 300)
-    .style("fill","black" )
-    .style("opacity", .1);
+        svgPlot1.append("line")
+            .attr("x1", 200)
+            .attr("y1", 200 )
+            .attr("x2", width - 200)
+            .attr("y2", 200)
+            .style("stroke-width", 1)
+            .style("stroke","#5A5A5A" );
 
-    // Add Axis
-    plot.append("g")
-        .call(tripAxis)
-        .attr("id", "yAxis")
-        .attr("transform", "translate(200,50)")
-        .style("font-size", 14)
-        .selectAll("text")
-        .style("fill", "#5A5A5A");
+        // Highlight rush hour peaks
+        svgPlot1.append("rect")
+            .attr("x", xScale(1))
+            .attr("y", 200)
+            .attr("width", 3*xScale(0)/5)
+            .attr("height", 300)
+            .style("fill","black" )
+            .style("opacity", .1);
 
-    plot.append("g")
-        .call(hourAxis)
-        .attr("id", "xAxis")
-        .attr("transform", "translate(0,500)")
-        .style("font-size", 14)
-        .selectAll("text")
-        .style("fill", "#ECF0F1")
-        .style("text-anchor", "middle");
+        svgPlot1.append("rect")
+            .attr("x", xScale(10))
+            .attr("y", 200)
+            .attr("width", 4*xScale(0)/5)
+            .attr("height", 300)
+            .style("fill","black" )
+            .style("opacity", .1);
 
-    plot.select("#yAxis")
-    .selectAll("path")
-    .style("stroke", "#272727");
+         plot.append("text")
+            .attr("x", xScale(2))
+            .attr("y",220)
+            .text("Morning")
+            .attr("font-size", 14)
+            .attr("fill", "white")
+            .style("text-anchor", "middle");
 
-    plot.select("#xAxis")
-    .selectAll("path")
-    .style("stroke", "#5A5A5A");
+        plot.append("text")
+            .attr("x", xScale(2))
+            .attr("y", 235)
+            .text("Rush Hour")
+            .attr("font-size", 14)
+            .attr("fill", "white")
+            .style("text-anchor", "middle");
 
-    svgPlot1.append("line")
-    .attr("x1", 200)
-    .attr("y1", 200 )
-    .attr("x2", width - 200)
-    .attr("y2", 200)
-    .style("stroke-width", 1)
-    .style("stroke","#5A5A5A" );
+        plot.append("text")
+            .attr("x", xScale(11.5))
+            .attr("y", 220)
+            .text("Evening")
+            .attr("font-size", 14)
+            .attr("fill", "white")
+            .style("text-anchor", "middle");
 
-    plot.append("text")
-        .attr("x", xScale(2))
-        .attr("y",220)
-        .text("Morning")
-        .attr("font-size", 14)
-        .attr("fill", "white")
-        .style("text-anchor", "middle");
+        plot.append("text")
+            .attr("x", xScale(11.5))
+            .attr("y", 235)
+            .text("Rush Hour")
+            .attr("font-size", 14)
+            .attr("fill", "white")
+            .style("text-anchor", "middle");
 
-    plot.append("text")
-        .attr("x", xScale(2))
-        .attr("y", 235)
-        .text("Rush Hour")
-        .attr("font-size", 14)
-        .attr("fill", "white")
-        .style("text-anchor", "middle");
+        // Add Title
+        plot.append("text")
+            .attr("x", 60)
+            .attr("y", 80)
+            .text("Citi Bike Trips During the Day")
+            .attr("font-size", 40)
+            .attr("fill", "grey")
+            .style("text-anchor", "right")
+            .style("font-weight", 200);
 
-    plot.append("text")
-        .attr("x", xScale(11.5))
-        .attr("y", 220)
-        .text("Evening")
-        .attr("font-size", 14)
-        .attr("fill", "white")
-        .style("text-anchor", "middle");
+        // Legends: Bicycle plus weekend/weekday
+        d3.select(".plot1").append("image")
+            .attr('d', "path")
+            .attr('xlink:href', "bicycleDay.png")
+            .attr("x", 60)
+            .attr("y", 120)
+            .attr("width", 30);
 
-    plot.append("text")
-        .attr("x", xScale(11.5))
-        .attr("y", 235)
-        .text("Rush Hour")
-        .attr("font-size", 14)
-        .attr("fill", "white")
-        .style("text-anchor", "middle");
+        svgPlot1.append("text")
+            .attr("x", 100)
+            .attr("y", 145)
+            .text("Weekday Trips")
+            .attr("font-size", 18)
+            .attr("fill",pinkColor)
+            .style("text-anchor", "right"); 
 
-    plot.append("text")
-        .attr("x", 60)
-        .attr("y", 80)
-        .text("Citi Bike Trips During the Day")
-        .attr("font-size", 40)
-        .attr("fill", "grey")
-        .style("text-anchor", "right")
-        .style("font-family", "Roboto")
-        .style("font-weight", 200);
+        d3.select(".plot1").append("image")
+            .attr('d', "path")
+            .attr('xlink:href', "bicycleEnd.png")
+            .attr("x", 250)
+            .attr("y", 120)
+            .attr("width", 30);
 
-    plot.append("text")
-        .attr("class", "mytext")
-        .attr("x", -2*height/3 - 60)
-        .attr("y", 100)
-        .text("Average Number of Trips")
-        .attr("font-size", 18)
-        .attr("fill", "#5A5A5A")
-        .attr("transform", "rotate(-90)");
+        svgPlot1.append("text")
+            .attr("x", 290)
+            .attr("y", 145)
+            .text("Weekend Trips")
+            .attr("font-size", 18)
+            .attr("fill", purpleColor)
+            .style("text-anchor", "right"); 
 
-    d3.selectAll("text").style("font-family","Roboto");
+        d3.selectAll("text").style("font-family","Roboto");
 
-    </script>
+        </script>
     </div>
 
     <script>
-    function plot(data,color) {
-        
-        var line = d3.line()
-        .x(function(d,i) {return xScale(i)})
-        .y(function(d,i) {return yScale(d)})
-        .curve(d3.curveBasis);
 
-        svgPlot1.append("path")
-        .attr("d", line(data))
-        .attr("stroke", color)
-        .attr("stroke-width", 5)
-        .attr("fill", "none")
-        .attr("transform", "translate(0,50)"); 
-    }
+        // Given the data, plot a curved line graph of the data in the given color
+        function plot(data,color) {
+            
+            var line = d3.line()
+            .x(function(d,i) {return xScale(i)})
+            .y(function(d,i) {return yScale(d)})
+            .curve(d3.curveBasis);
+
+            svgPlot1.append("path")
+            .attr("d", line(data))
+            .attr("stroke", color)
+            .attr("stroke-width", 5)
+            .attr("fill", "none")
+            .attr("transform", "translate(0,50)"); 
+        }
     </script>
 
-<div id = "plot2"> 
+    <div id = "plot2"> 
 
     <script>
 
+    // Create second graph: Number of bike rides has increased on Fifth Ave since the introduction of Citi Bikes
     var totalData;
     var totalDatapath = [];
 
-    // Scales for Graph
+    // Scales for graph
     var timeScale = d3.scaleLinear()
         .domain([0,12])
         .range([height - (height/4),100]);
@@ -855,6 +882,7 @@
         .domain([12000,30000])
         .range([200, width-200]);
 
+    // Years of interest
     var years = ["", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016" , ""];
 
     function parseLine2(line) {
@@ -863,6 +891,7 @@
             total: Number(line["Total 50th ave BikeCount/Day September"])
     };}
 
+    // Load data file and plot total number of trips in given year
     d3.csv("totalBikers.csv", parseLine2, function(error,data) {
         rideData = data;
         totalDatapath.push(0);
@@ -875,7 +904,7 @@
 
         });
 
-
+    // Create the svg and plot
     var width = screenWidth;
     var height = 600;
 
@@ -883,6 +912,7 @@
         .attr("class", "plot2")
         .attr("height", height).attr("width", width);
 
+    // Create Axis
     var rideAxis = d3.axisBottom(rideScale)
         .ticks(11)
         .tickSize(0)
@@ -917,21 +947,42 @@
         .style("text-anchor", "middle");
 
     plot2.select("#yearAxis")
-    .selectAll("path")
-    .style("stroke", "#272727");
+        .selectAll("path")
+        .style("stroke", "#272727");
 
     plot2.select("#rideAxis")
-    .selectAll("path")
-    .style("stroke", "#5A5A5A");
+        .selectAll("path")
+        .style("stroke", "#5A5A5A");
 
     svgPlot2.append("line")
-    .attr("x1", 200)
-    .attr("y1", 130 )
-    .attr("x2", width - 200)
-    .attr("y2", 130)
-    .style("stroke-width", 1)
-    .style("stroke","#5A5A5A" );
+        .attr("x1", 200)
+        .attr("y1", 130 )
+        .attr("x2", width - 200)
+        .attr("y2", 130)
+        .style("stroke-width", 1)
+        .style("stroke","#5A5A5A" );
 
+     plot2.append("text")
+            .attr("class", "mytext")
+            .attr("x", -2*height/3 + 50)
+            .attr("y", 100)
+            .text("Year")
+            .attr("font-size", 18)
+            .attr("fill", "#5A5A5A")
+            .attr("transform", "rotate(-90)")
+            .style("font-family", "Roboto");
+
+        plot2.append("text")
+            .attr("class", "mytext")
+            .attr("x", width/2)
+            .attr("y", 580)
+            .text("Total Bike Rides")
+            .attr("font-size", 18)
+            .attr("fill", "#5A5A5A")
+            .style("text-anchor", "middle")
+            .style("font-family", "Roboto");
+
+    // Add title
     plot2.append("text")
         .attr("x", 60)
         .attr("y", 35)
@@ -952,31 +1003,13 @@
         .style("font-family", "Roboto")
         .style("font-weight", 200);
 
-    plot2.append("text")
-        .attr("class", "mytext")
-        .attr("x", -2*height/3 + 50)
-        .attr("y", 100)
-        .text("Year")
-        .attr("font-size", 18)
-        .attr("fill", "#5A5A5A")
-        .attr("transform", "rotate(-90)")
-        .style("font-family", "Roboto");
-
-    plot2.append("text")
-        .attr("class", "mytext")
-        .attr("x", width/2)
-        .attr("y", 580)
-        .text("Total Bike Rides")
-        .attr("font-size", 18)
-        .attr("fill", "#5A5A5A")
-        .style("text-anchor", "middle")
-        .style("font-family", "Roboto");
-
     </script>
     <div>
 
 
     <script>
+
+    // Plot histogram: Bike rides vs year
     function plot2(data,color) {
         var definitions = svgPlot2.append("defs");
         var linearGradient = definitions.append("linearGradient")
@@ -994,10 +1027,11 @@
             .attr("offset", "100%")   
             .attr("stop-color", pinkColor); 
 
-
         data.forEach(function(d,i) {
+            // Create a histogram using svg rectangles
             if (d>0) {
 
+                // Highlight the years Citi Bikes were in use in NYC
                 if (i == 8 || i == 9 || i == 10 || i == 11) {
                     svgPlot2.append("rect")
                         .attr("x", rideScale(12000))
@@ -1014,21 +1048,19 @@
                         .attr("y", timeScale(i) + 30)
                         .attr("width", 30);
                 }
+
                 else {
-                    svgPlot2.append("line")
-                        .attr("y1", timeScale(i))
-                        .attr("x1", rideScale(12000))
-                        .attr("y2", timeScale(i))
-                        .attr("x2", rideScale(d))
-                        .attr("stroke", color)
-                        .attr("stroke-width", 5)
-                        .attr("fill", "none")
+                    svgPlot2.append("rect")
+                        .attr("x", rideScale(12000))
+                        .attr("y", timeScale(i) - 2.5)
+                        .attr("width", rideScale(d) - rideScale(12000))
+                        .attr("height", 5)
+                        .attr("fill", color)
                         .attr("transform", "translate(0,50)");
                 }
-        }
+            }
 
-    });
-
+         });
     }
     </script>
 </div>
