@@ -349,6 +349,9 @@
                     .attr("r", "7px")
                     .attr("fill", "#FBFF78")
                     .style("opacity", 0.9);
+                    console.log(mapStationID[station].name);
+                    console.log(lon);
+                    console.log(lat);
                 }
 
                 else {
@@ -360,6 +363,156 @@
                     .style("opacity", 0.9);
                 }
             }
+            g1.append("line") //Pershing Square
+            .attr("x1", projection([-73.977706, 40.751873])[0])
+            .attr("y1", projection([-73.977706, 40.751873])[1])
+            .attr("x2", projection([-73.977706, 40.751873])[0] - 200)
+            .attr("y2", projection([-73.977706, 40.751873])[1] - 107)
+            .attr("stroke-width", 1.5)
+            .attr("stroke", "grey");
+
+            g1.append("text")
+            .attr("x", projection([-73.977706, 40.751873])[0] - 285)
+            .attr("y", projection([-73.977706, 40.751873])[1] - 98)
+            .text("Grand Central")
+            .attr("font-size", 13)
+            .attr("fill", "grey")
+            .style("text-anchor", "right")
+            .style("font-family", "Roboto");
+
+            g1.append("image")
+            .attr('d', "path")
+            .attr('xlink:href', "train.png")
+            .attr("x", projection([-73.977706, 40.751873])[0] - 270)
+            .attr("y", projection([-73.977706, 40.751873])[1] - 165)
+            .attr("width", 50)
+            .attr("height", 50);
+
+            g1.append("line") //8th Ave and W 33
+            .attr("x1", projection([-73.993934, 40.751551])[0])
+            .attr("y1", projection([-73.993934, 40.751551])[1])
+            .attr("x2", projection([-73.993934, 40.751551])[0] - 160)
+            .attr("y2", projection([-73.993934, 40.751551])[1] - 14)
+            .attr("stroke-width", 1.5)
+            .attr("stroke", "grey");
+
+            g1.append("text")
+            .attr("x", projection([-73.993934, 40.751551])[0] - 220)
+            .attr("y", projection([-73.993934, 40.751551])[1])
+            .text("Midtown")
+            .attr("font-size", 13)
+            .attr("fill", "grey")
+            .style("text-anchor", "right")
+            .style("font-family", "Roboto");
+
+            g1.append("image")
+            .attr('d', "path")
+            .attr('xlink:href', "cityscape.png")
+            .attr("x", projection([-73.993934, 40.751551])[0] - 220)
+            .attr("y", projection([-73.993934, 40.751551])[1] - 68)
+            .attr("width", 50)
+            .attr("height", 50);
+
+            g1.append("line") //Broadway & E 22
+            .attr("x1", projection([-73.98955109, 40.7403432])[0])
+            .attr("y1", projection([-73.98955109, 40.7403432])[1])
+            .attr("x2", projection([-73.98955109, 40.7403432])[0] - 180)
+            .attr("y2", projection([-73.98955109, 40.7403432])[1] + 30)
+            .attr("stroke-width", 1.5)
+            .attr("stroke", "grey");
+
+            g1.append("text")
+            .attr("x", projection([-73.98955109, 40.7403432])[0] - 260)
+            .attr("y", projection([-73.98955109, 40.7403432])[1] + 55)
+            .text("Flatiron Building")
+            .attr("font-size", 13)
+            .attr("fill", "grey")
+            .style("text-anchor", "right")
+            .style("font-family", "Roboto");
+
+            g1.append("image")
+            .attr('d', "path")
+            .attr('xlink:href', "building.png")
+            .attr("x", projection([-73.993934, 40.751551])[0] - 220)
+            .attr("y", projection([-73.993934, 40.751551])[1] + 35)
+            .attr("width", 50)
+            .attr("height", 50);
+
+            g2.append("line") //Central Park
+            .attr("x1", projection([-73.97620574, 40.77579377])[0])
+            .attr("y1", projection([-73.97620574, 40.77579377])[1])
+            .attr("x2", projection([-73.97620574, 40.77579377])[0] - 200)
+            .attr("y2", projection([-73.97620574, 40.77579377])[1] + 10)
+            .attr("stroke-width", 1.5)
+            .attr("stroke", "grey");
+
+            g2.append("text")
+            .attr("x", projection([-73.97620574, 40.77579377])[0] - 270)
+            .attr("y", projection([-73.97620574, 40.77579377])[1] + 30)
+            .text("Central Park")
+            .attr("font-size", 13)
+            .attr("fill", "grey")
+            .style("text-anchor", "right")
+            .style("font-family", "Roboto");
+
+            g2.append("image")
+            .attr('d', "path")
+            .attr('xlink:href', "bench.png")
+            .attr("x", projection([-73.97620574, 40.77579377])[0] - 260)
+            .attr("y", projection([-73.97620574, 40.77579377])[1] - 38)
+            .attr("width", 50)
+            .attr("height", 50);
+
+            g2.append("line") //Hudson River Park
+            .attr("x1", projection([-74.01129574, 40.72771408])[0])
+            .attr("y1", projection([-74.01129574, 40.72771408])[1])
+            .attr("x2", projection([-74.01129574, 40.72771408])[0] - 80)
+            .attr("y2", projection([-74.01129574, 40.72771408])[1] - 59)
+            .attr("stroke-width", 1.5)
+            .attr("stroke", "grey");
+
+            g2.append("text")
+            .attr("x", projection([-74.01129574, 40.72771408])[0] - 180)
+            .attr("y", projection([-74.01129574, 40.72771408])[1] - 67)
+            .text("Hudson River Park")
+            .attr("font-size", 13)
+            .attr("fill", "grey")
+            .style("text-anchor", "right")
+            .style("font-family", "Roboto");
+
+            g2.append("image")
+            .attr('d', "path")
+            .attr('xlink:href', "pier.png")
+            .attr("x", projection([-74.01129574, 40.72771408])[0] - 150)
+            .attr("y", projection([-74.01129574, 40.72771408])[1] - 134)
+            .attr("width", 50)
+            .attr("height", 50);
+
+            g2.append("line") //Governor's Island
+            .attr("x1", projection([-74.016966, 40.686931])[0])
+            .attr("y1", projection([-74.016966, 40.686931])[1])
+            .attr("x2", projection([-74.016966, 40.686931])[0] - 65)
+            .attr("y2", projection([-74.016966, 40.686931])[1] - 128)
+            .attr("stroke-width", 1.5)
+            .attr("stroke", "grey");
+
+            g2.append("text")
+            .attr("x", projection([-74.016966, 40.686931])[0] - 159)
+            .attr("y", projection([-74.016966, 40.686931])[1] - 135)
+            .text("Governor's Island")
+            .attr("font-size", 13)
+            .attr("fill", "grey")
+            .style("text-anchor", "right")
+            .style("font-family", "Roboto");
+
+            g2.append("image")
+            .attr('d', "path")
+            .attr('xlink:href', "island.png")
+            .attr("x", projection([-74.016966, 40.686931])[0] - 135)
+            .attr("y", projection([-74.016966, 40.686931])[1] - 200)
+            .attr("width", 50)
+            .attr("height", 50);
+            
         });
 
         // Plot average number of bike rides per hour during a weekday / weekend day
@@ -605,5 +758,4 @@
 <!-- graphing code referenced from http://bl.ocks.org/phil-pedruco/6646844-->
 <!-- color gradient coding tutorial referenced from https://www.visualcinnamon.com/2016/05/smooth-color-legend-d3-svg-gradient.html-->
 <!--http://stackoverflow.com/questions/20142951/how-to-set-the-background-color-of-a-d3-js-svg-->
-
-</html>
+<!--<div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>-->
