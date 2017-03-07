@@ -61,7 +61,7 @@
         .attr("fill", "white");
 
     svgTitle.append("text")
-        .text("Where are New Yorkers going?")
+        .text("Changing the way NYC gets around")
         .attr("x", 230)
         .attr("y", 130)
         .attr("font-size", "42px")
@@ -645,7 +645,7 @@
     </div>
 
 
-    <div id = "plot"> 
+        <div id = "plot"> 
 
     <script>
     // Create bottom graph: Average weekday trips per hour vs weekend trips
@@ -653,9 +653,9 @@
     var width = screenWidth;
     var height = 600;
 
-    var svg = d3.select("#plot").append("svg")
+    var svgPlot1 = d3.select("#plot").append("svg")
         .attr("class", "plot1")
-        .attr("height", height).attr("width", width);
+        .attr("height", height-20).attr("width", width);
 
     // Weekday Legend
     d3.select(".plot1").append("image")
@@ -665,7 +665,7 @@
     .attr("y", 120)
     .attr("width", 30);
 
-    svg.append("text")
+    svgPlot1.append("text")
         .attr("x", 100)
         .attr("y", 145)
         .text("Weekday Trips")
@@ -681,7 +681,7 @@
     .attr("y", 120)
     .attr("width", 30);
 
-    svg.append("text")
+    svgPlot1.append("text")
         .attr("x", 290)
         .attr("y", 145)
         .text("Weekend Trips")
@@ -702,7 +702,7 @@
         
     var hourAxis = d3.axisBottom(xScale)
         .tickFormat( function(d,i) { return hours[d]})
-        .ticks(10)
+        .ticks(15)
         .tickSize(0)
         .tickPadding(20);
 
@@ -711,23 +711,23 @@
         .tickSize(0)
         .tickPadding(20);
 
-    var plot = svg.append("g");
+    var plot = svgPlot1.append("g");
 
     plot.attr("class", "plot");
 
     // Highlight rush hour peaks
-    svg.append("rect")
+    svgPlot1.append("rect")
     .attr("x", xScale(1))
     .attr("y", 200)
-    .attr("width", xScale(0) * (1/2))
+    .attr("width", 3*xScale(0)/5)
     .attr("height", 300)
     .style("fill","black" )
     .style("opacity", .1);
 
-    svg.append("rect")
+    svgPlot1.append("rect")
     .attr("x", xScale(10))
     .attr("y", 200)
-    .attr("width", xScale(0)* (3/4))
+    .attr("width", 4*xScale(0)/5)
     .attr("height", 300)
     .style("fill","black" )
     .style("opacity", .1);
@@ -748,7 +748,7 @@
         .style("font-size", 14)
         .selectAll("text")
         .style("fill", "#ECF0F1")
-        .style("text-anchor", "start");
+        .style("text-anchor", "middle");
 
     plot.select("#yAxis")
     .selectAll("path")
@@ -758,7 +758,7 @@
     .selectAll("path")
     .style("stroke", "#5A5A5A");
 
-    svg.append("line")
+    svgPlot1.append("line")
     .attr("x1", 200)
     .attr("y1", 200 )
     .attr("x2", width - 200)
@@ -801,7 +801,7 @@
     plot.append("text")
         .attr("x", 60)
         .attr("y", 80)
-        .text("Biking Trips During the Day")
+        .text("Citi Bike Trips During the Day")
         .attr("font-size", 40)
         .attr("fill", "grey")
         .style("text-anchor", "right")
@@ -823,7 +823,6 @@
     </div>
 
     <script>
-
     function plot(data,color) {
         
         var line = d3.line()
@@ -831,7 +830,7 @@
         .y(function(d,i) {return yScale(d)})
         .curve(d3.curveBasis);
 
-        svg.append("path")
+        svgPlot1.append("path")
         .attr("d", line(data))
         .attr("stroke", color)
         .attr("stroke-width", 5)
@@ -839,6 +838,200 @@
         .attr("transform", "translate(0,50)"); 
     }
     </script>
+
+<div id = "plot2"> 
+
+    <script>
+
+    var totalData;
+    var totalDatapath = [];
+
+    // Scales for Graph
+    var timeScale = d3.scaleLinear()
+        .domain([0,12])
+        .range([height - (height/4),100]);
+
+    var rideScale = d3.scaleLinear()
+        .domain([12000,30000])
+        .range([200, width-200]);
+
+    var years = ["", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016" , ""];
+
+    function parseLine2(line) {
+        return {
+            year: Number(line["Year"]),
+            total: Number(line["Total 50th ave BikeCount/Day September"])
+    };}
+
+    d3.csv("totalBikers.csv", parseLine2, function(error,data) {
+        rideData = data;
+        totalDatapath.push(0);
+
+        rideData.forEach(function (d) {
+            totalDatapath.push(d.total);
+        });
+
+        plot2(totalDatapath, "#111011");
+
+        });
+
+
+    var width = screenWidth;
+    var height = 600;
+
+    var svgPlot2 = d3.select("#plot2").append("svg")
+        .attr("class", "plot2")
+        .attr("height", height).attr("width", width);
+
+    var rideAxis = d3.axisBottom(rideScale)
+        .ticks(11)
+        .tickSize(0)
+        .tickPadding(20);
+
+    var yearAxis = d3.axisLeft(timeScale)
+        .tickFormat( function(d,i) { return years[d]})
+        .ticks(12)
+        .tickSize(0)
+        .tickPadding(30);
+
+    var plot2 = svgPlot2.append("g");
+
+    plot2.attr("class", "plot2");
+
+    // Add Axis
+    plot2.append("g")
+        .call(rideAxis)
+        .attr("id", "rideAxis")
+        .attr("transform", "translate(0,500)")
+        .style("font-size", 14)
+        .selectAll("text")
+        .style("fill", "lightGrey");
+
+    plot2.append("g")
+        .call(yearAxis)
+        .attr("id", "yearAxis")
+        .attr("transform", "translate(200,50)")
+        .style("font-size", 14)
+        .selectAll("text")
+        .style("fill", "#5A5A5A")
+        .style("text-anchor", "middle");
+
+    plot2.select("#yearAxis")
+    .selectAll("path")
+    .style("stroke", "#272727");
+
+    plot2.select("#rideAxis")
+    .selectAll("path")
+    .style("stroke", "#5A5A5A");
+
+    svgPlot2.append("line")
+    .attr("x1", 200)
+    .attr("y1", 130 )
+    .attr("x2", width - 200)
+    .attr("y2", 130)
+    .style("stroke-width", 1)
+    .style("stroke","#5A5A5A" );
+
+    plot2.append("text")
+        .attr("x", 60)
+        .attr("y", 35)
+        .text("Total Bike Rides on Fifth Avenue")
+        .attr("font-size", 40)
+        .attr("fill", "grey")
+        .style("text-anchor", "right")
+        .style("font-family", "Roboto")
+        .style("font-weight", 200);
+
+    plot2.append("text")
+        .attr("x", 60)
+        .attr("y", 85)
+        .text("Citi Bikes were introduced in 2013")
+        .attr("font-size", 25)
+        .attr("fill", pinkColor)
+        .style("text-anchor", "right")
+        .style("font-family", "Roboto")
+        .style("font-weight", 200);
+
+    plot2.append("text")
+        .attr("class", "mytext")
+        .attr("x", -2*height/3 + 50)
+        .attr("y", 100)
+        .text("Year")
+        .attr("font-size", 18)
+        .attr("fill", "#5A5A5A")
+        .attr("transform", "rotate(-90)")
+        .style("font-family", "Roboto");
+
+    plot2.append("text")
+        .attr("class", "mytext")
+        .attr("x", width/2)
+        .attr("y", 580)
+        .text("Total Bike Rides")
+        .attr("font-size", 18)
+        .attr("fill", "#5A5A5A")
+        .style("text-anchor", "middle")
+        .style("font-family", "Roboto");
+
+    </script>
+    <div>
+
+
+    <script>
+    function plot2(data,color) {
+        var definitions = svgPlot2.append("defs");
+        var linearGradient = definitions.append("linearGradient")
+            .attr("id", "linGradient2");
+
+        linearGradient.append("stop") 
+            .attr("offset", "0%")   
+            .attr("stop-color", purpleColor)
+            .attr("x1", "0%")
+            .attr("y1", "0%")
+            .attr("x2", "0%")
+            .attr("y2", "100%");; 
+
+        linearGradient.append("stop") 
+            .attr("offset", "100%")   
+            .attr("stop-color", pinkColor); 
+
+
+        data.forEach(function(d,i) {
+            if (d>0) {
+
+                if (i == 8 || i == 9 || i == 10 || i == 11) {
+                    svgPlot2.append("rect")
+                        .attr("x", rideScale(12000))
+                        .attr("y", timeScale(i) - 2.5)
+                        .attr("width", rideScale(d) - rideScale(12000))
+                        .attr("height", 5)
+                        .attr("fill", "url(#linGradient2)")
+                        .attr("transform", "translate(0,50)");
+
+                    svgPlot2.append("image")
+                        .attr("d", "path")
+                        .attr("xlink:href", "bicycleDay.png")
+                        .attr("x", rideScale(d) + 10)
+                        .attr("y", timeScale(i) + 30)
+                        .attr("width", 30);
+                }
+                else {
+                    svgPlot2.append("line")
+                        .attr("y1", timeScale(i))
+                        .attr("x1", rideScale(12000))
+                        .attr("y2", timeScale(i))
+                        .attr("x2", rideScale(d))
+                        .attr("stroke", color)
+                        .attr("stroke-width", 5)
+                        .attr("fill", "none")
+                        .attr("transform", "translate(0,50)");
+                }
+        }
+
+    });
+
+    }
+    </script>
+</div>
 </div>
 </body>
 
