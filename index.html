@@ -4,7 +4,7 @@
     <title>CS 3300 Project 1</title>
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css?family=Roboto:Thin,Regular');
+        @import url('https://fonts.googleapis.com/css?family=Roboto:Bold,Thin,Regular');
         #boroughs {
             stroke: #272727;
             stroke-width: 2px;
@@ -96,6 +96,7 @@
 
     </script>
 </div>
+
 
 <div id = "maps">
 
@@ -270,31 +271,6 @@
                 .enter().append("path")
                 .attr("class", function(d){ return d.properties.name; })
                 .attr("d", path)
-
-            //Color gradient bar tutorial from https://www.visualcinnamon.com/2016/05/smooth-color-legend-d3-svg-gradient.html
-            var definitions = svg1.append("defs");
-            var linearGradient = definitions.append("linearGradient")
-                .attr("id", "linGradient");
-
-            linearGradient.append("stop") 
-                .attr("offset", "0%")   
-                .attr("stop-color", "#0D15DB"); 
-
-            linearGradient.append("stop") 
-                .attr("offset", "50%")   
-                .attr("stop-color", purpleColor); 
-
-            linearGradient.append("stop") 
-                .attr("offset", "100%")   
-                .attr("stop-color", "#FBFF78"); 
-
-
-            svgTitle.append("rect")
-                .attr("x", 100)
-                .attr("y", 540)
-                .attr("width", 100)
-                .attr("height", 20)
-                .style("fill", "url(#linGradient)");
 
 
             //Loop through all stations 
@@ -553,6 +529,118 @@
         .style("font-weight", 200)
         .style("font-size", 40)
         .style("fill", "grey");
+
+    </script>
+    </div>
+
+    <div id = "legends">
+    <script>
+        // Scale Keys
+        // Color gradient bar tutorial from https://www.visualcinnamon.com/2016/05/smooth-color-legend-d3-svg-gradient.html
+        var svg3 = d3.select("#legends").append("svg")
+            .attr("width", width)
+            .attr("height", 100);
+
+        var svg4 = d3.select("#legends").append("svg")
+            .attr("width", width)
+            .attr("height", 100);
+
+        var definitions = svg3.append("defs");
+        var linearGradient = definitions.append("linearGradient")
+            .attr("id", "linGradient");
+
+        linearGradient.append("stop") 
+            .attr("offset", "0%")   
+            .attr("stop-color", "#0D15DB"); 
+
+        linearGradient.append("stop") 
+            .attr("offset", "50%")   
+            .attr("stop-color", purpleColor); 
+
+        linearGradient.append("stop") 
+            .attr("offset", "100%")   
+            .attr("stop-color", "#FBFF78"); 
+
+        generateKeys(svg3, "Weekday % Weekend");
+        generateKeys(svg4, "Weekend % Weekday");
+
+        function generateKeys(mySvg, ratio) {
+            mySvg.append("rect")
+                .attr("x", 500)
+                .attr("y", 50)
+                .attr("width", 150)
+                .attr("height", 5)
+                .style("fill", "url(#linGradient)")
+                .attr("transform", "translate(0,10)");
+
+            mySvg.append("text")
+                .attr("x", 500)
+                .attr("y", 20)
+                .text(ratio)
+                .style("fill", "grey")
+                .attr("transform", "translate(0,10)");
+;
+
+            mySvg.append("text")
+                .attr("x", 500)
+                .attr("y", 40)
+                .text("Popularity Ratio")
+                .style("font-family", "Roboto")
+                .style("fill", "grey")
+                .attr("transform", "translate(0,10)");
+
+            mySvg.append("line")
+                .attr("x1", 620)
+                .attr("x2", 650)
+                .attr("y1", 35)
+                .attr("y2", 35)
+                .style("stroke", "#111011")
+                .style("stroke-width", 2)
+                .attr("transform", "translate(0,10)");
+
+            mySvg.append("path")
+                .attr("d", "M 95,50 5,95 5,5 z")
+                .attr("stroke", "#111011")
+                .attr("fill", "#111011")
+                .attr("transform", "translate(641,40),scale(0.1)")
+
+            mySvg.append("circle")
+                .attr("cx", 395)
+                .attr("cy", 45)
+                .attr("r", 4)
+                .style("fill", purpleColor)
+                .attr("transform", "translate(0,10)");
+
+            mySvg.append("text")
+                .attr("x", 350)
+                .attr("y", 20)
+                .text("Station Popularity")
+                .style("font-family", "Roboto")
+                .style("fill", "grey").attr("transform", "translate(0,10)");
+
+            mySvg.append("text")
+                .attr("x", 350)
+                .attr("y", 50)
+                .text("Low")
+                .style("font-family", "Roboto")
+                .style("fill", "grey")
+                .attr("transform", "translate(0,10)");
+
+            mySvg.append("circle")
+                .attr("cx", 460)
+                .attr("cy", 45)
+                .attr("r", 10)
+                .style("fill", purpleColor).attr("transform", "translate(0,10)");
+
+            mySvg.append("text")
+                .attr("x", 410)
+                .attr("y", 50)
+                .text("High")
+                .style("font-family", "Roboto")
+                .style("fill", "grey").attr("transform", "translate(0,10)");
+            
+        }
+
     </script>
     </div>
 
