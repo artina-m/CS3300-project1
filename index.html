@@ -6,7 +6,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css?family=Roboto:Thin,Regular');
         #boroughs {
-            stroke: #1f2121;
+            stroke: #272727;
             stroke-width: 2px;
             fill: #111011;
         }   
@@ -35,56 +35,61 @@
     var screenWidth = 1440;
     var screenHeight = 1000;
 
+    var pinkColor = "#F95E5E";
+    var purpleColor = "#7445DC";
+
     var svgTitle = d3.select("#topTitle").append("svg")
         .attr("class", "title")
         .attr("width", screenWidth)
         .attr("height", 200);
 
-    svgTitle.append("text")
-            .text("Citi Bike Trip Visualization")
-            .attr("x", 60)
-            .attr("y", 100)
-            .attr("font-size", "42px")
-            .style("font-family", "Roboto")
-            .style("font-weight", 200)
-            .style("text-anchor", "right")
-            .attr("fill", "white");
-
-    svgTitle.append("text")
-            .text("The popularity of a Citi Bike station varies from weekday to weekend.")
-            .attr("x", 60)
-            .attr("y", 140)
-            .attr("font-size", "15px")
-            .style("font-family", "Roboto")
-            .attr("fill", "#7A7A7A");
-
     d3.select("svg").append("image")
-    .attr("d", "path")
-    .attr("xlink:href", "skyline.png")
-    .attr("x", screenWidth - 600)
-    .attr("y", -50)
-    .attr("width", 500);
+        .attr("d", "path")
+        .attr("xlink:href", "skyline.png")
+        .attr("x", screenWidth - 500)
+        .attr("y", -8)
+        .attr("width", 400);
+
+    svgTitle.append("text")
+        .text("Citi Bike")
+        .attr("x", 60)
+        .attr("y", 130)
+        .attr("font-size", "42px")
+        .style("font-family", "Roboto")
+        .style("font-weight", 200)
+        .style("text-anchor", "right")
+        .attr("fill", "white");
+
+    svgTitle.append("text")
+        .text("Where are New Yorkers going?")
+        .attr("x", 230)
+        .attr("y", 130)
+        .attr("font-size", "42px")
+        .style("font-family", "Roboto")
+        .style("font-weight", 200)
+        .style("text-anchor", "right")
+        .attr("fill", "grey");
 
     svgTitle.append("line")
-    .attr("x1", 60)
-    .attr("x2", screenWidth -200)
-    .attr("y1", 160)
-    .attr("y2", 160)
-    .attr("stroke","#F94C5A")
-    .attr("stroke-width", 2);
-
-    svgTitle.append("line")
-    .attr("x1", screenWidth-200)
+    .attr("x1", screenWidth-270)
     .attr("x2", screenWidth -100)
     .attr("y1", 160)
     .attr("y2", 160)
     .attr("stroke","#111011")
     .attr("stroke-width", 2);
 
+    svgTitle.append("line")
+    .attr("x1", 60)
+    .attr("x2", screenWidth -270)
+    .attr("y1", 160)
+    .attr("y2", 160)
+    .attr("stroke",pinkColor)
+    .attr("stroke-width", 2);
+
     d3.select("svg").append("image")
     .attr('d', "path")
     .attr('xlink:href', "bicycleDay.png")
-    .attr("x", screenWidth - 190)
+    .attr("x", screenWidth - 280)
     .attr("y", 115)
     .attr("width", 50)
     .attr("height", 50);
@@ -116,13 +121,11 @@
     var minWeekend = Number.MAX_SAFE_INTEGER;  // Minimum weekend rides
     var maxWeekend = Number.MIN_SAFE_INTEGER;  // Maximum weekend rides
 
-    var weekdayColor = "#F94C5A";
-    var weekendColor = "#6739CA";
 
     // Scales
     var color_weekday = d3.scaleLinear()
         .domain([-300,0, 300])
-        .range(["#0D15DB","#8030F5","#FBFF78 "]);
+        .range(["#0C4D86",purpleColor,"#FBFF78 "]);
 
     var size_weekday = d3.scaleSqrt()
         .domain([0.4, 1445.4])
@@ -130,11 +133,12 @@
 
     var color_weekend = d3.scaleLinear()
         .domain([-200,0, 200])
-        .range(["#0D15DB","#8030F5","#FBFF78"]);
+        .range(["#0C4D86",purpleColor,"#FBFF78"]);
 
     var size_weekend = d3.scaleSqrt()
         .domain([0, 1003.5])
         .range([1, 6]);
+
 
     function parseLine(line) {
         return {
@@ -195,6 +199,7 @@
                 // Find every unique station, keep track of station data 
                 // and how many times each station is visited
                 else {
+
                     weekendTrips[hour] = weekendTrips[hour] + 1;
                     weekendTotalTrips  = weekendTotalTrips + 1;
 
@@ -233,6 +238,7 @@
             minWeekend = Math.min(minWeekend,mapStationID[station].weekendRides );  // 0
             maxWeekend = Math.max(maxWeekend, mapStationID[station].weekendRides);  // 1003.5
         }
+
 
         d3.json("nyc.geojson", function(error, nyb) {
 
@@ -276,7 +282,7 @@
 
             linearGradient.append("stop") 
                 .attr("offset", "50%")   
-                .attr("stop-color", "#8030F5"); 
+                .attr("stop-color", purpleColor); 
 
             linearGradient.append("stop") 
                 .attr("offset", "100%")   
@@ -289,6 +295,7 @@
                 .attr("width", 100)
                 .attr("height", 20)
                 .style("fill", "url(#linGradient)");
+
 
             //Loop through all stations 
             for (var station in mapStationID){
@@ -306,7 +313,7 @@
                     .attr("cy", projection([lon,lat])[1])
                     .attr("r", "7px")
                     .attr("fill", "#FBFF78")
-                    .style("opacity", 0.8);
+                    .style("opacity", 0.9);
                 }
 
                 else if (netFlowWeekday < -300) {
@@ -315,7 +322,7 @@
                     .attr("cy", projection([lon,lat])[1])
                     .attr("r", "1px")
                     .attr("fill", "#0D15DB")
-                    .style("opacity", 0.8);
+                    .style("opacity", 0.9);
                 }
 
                 else {
@@ -324,7 +331,7 @@
                     .attr("cy", projection([lon,lat])[1])
                     .attr("r", size_weekday(weekday_popularity))
                     .attr("fill", color_weekday(netFlowWeekday))
-                    .style("opacity", 0.8);
+                    .style("opacity", 0.9);
                 }
 
                 if (netFlowWeekend < -200) {
@@ -333,7 +340,7 @@
                     .attr("cy", projection([lon,lat])[1])
                     .attr("r", "1px")
                     .attr("fill", "#0D15DB")
-                    .style("opacity", 0.8);
+                    .style("opacity", 0.9);
                 }
                 else if (netFlowWeekend > 200) {
                     g2.append("circle")
@@ -341,7 +348,7 @@
                     .attr("cy", projection([lon,lat])[1])
                     .attr("r", "7px")
                     .attr("fill", "#FBFF78")
-                    .style("opacity", 0.8);
+                    .style("opacity", 0.9);
                 }
 
                 else {
@@ -350,20 +357,20 @@
                     .attr("cy", projection([lon,lat])[1])
                     .attr("r", size_weekend(weekend_popularity))
                     .attr("fill", color_weekend(netFlowWeekend))
-                    .style("opacity", 0.8);
+                    .style("opacity", 0.9);
                 }
             }
         });
 
         // Plot average number of bike rides per hour during a weekday / weekend day
-        plot(weekdayTrips, weekdayColor);
-        plot(weekendTrips, weekendColor);
+        plot(weekdayTrips, pinkColor);
+        plot(weekendTrips, purpleColor);
 
     });
     </script>
 
     <script>
-
+        // SVG for maps
         var width = 650,
             height = 550;
 
@@ -373,12 +380,13 @@
 
         svg1.append("text")
         .attr("x", 60)
-        .attr("y", 30 )
-        .text("Weekday")
+        .attr("y", 42 )
+        .text("Weekdays")
         .style("font-family", "Roboto")
         .style("font-weight", 200)
         .style("font-size", 40)
         .style("fill", "grey");
+
 
         var svg2 = d3.select("#maps").append("svg")
             .attr("width", width)
@@ -386,15 +394,15 @@
 
         svg2.append("text")
         .attr("x", 60)
-        .attr("y", 30 )
-        .text("Weekend")
+        .attr("y", 42 )
+        .text("Weekends")
         .style("font-family", "Roboto")
         .style("font-weight", 200)
         .style("font-size", 40)
         .style("fill", "grey");
-
     </script>
     </div>
+
 
     <div id = "plot"> 
 
@@ -421,7 +429,7 @@
         .attr("y", 145)
         .text("Weekday Trips")
         .attr("font-size", 18)
-        .attr("fill", weekdayColor)
+        .attr("fill",pinkColor)
         .style("text-anchor", "right"); 
 
     // Weekend Legend
@@ -437,7 +445,7 @@
         .attr("y", 145)
         .text("Weekend Trips")
         .attr("font-size", 18)
-        .attr("fill", weekendColor)
+        .attr("fill", purpleColor)
         .style("text-anchor", "right"); 
 
     // Scales for Graph
@@ -551,7 +559,7 @@
 
     plot.append("text")
         .attr("x", 60)
-        .attr("y", 100)
+        .attr("y", 80)
         .text("Biking Trips During the Day")
         .attr("font-size", 40)
         .attr("fill", "grey")
