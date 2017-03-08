@@ -354,6 +354,8 @@
                     .style("opacity", 0.9);
                 }
             }
+
+
             g1.append("line") //Pershing Square
             .attr("x1", projection([-73.977706, 40.751873])[0])
             .attr("y1", projection([-73.977706, 40.751873])[1])
@@ -579,11 +581,20 @@
         // Create legends/keys for each map
         var svg3 = d3.select("#legends").append("svg")
             .attr("width", width)
-            .attr("height", 80);
+            .attr("height", 100);
+
 
         var svg4 = d3.select("#legends").append("svg")
             .attr("width", width)
-            .attr("height", 80);
+            .attr("height", 100);
+
+        svg4.append("text")
+            .attr("x", 350)
+            .attr("y", 95)
+            .text("* Total Trips from 9/6/2016 - 9/12/2016")
+            .style("font-family", "Roboto")
+            .style("fill", "grey")
+            .style("font-size", 15);
 
 
         // Color gradient bar tutorial from https://www.visualcinnamon.com/2016/05/smooth-color-legend-d3-svg-gradient.html
@@ -603,17 +614,17 @@
             .attr("offset", "100%")   
             .attr("stop-color", "#FBFF78"); 
 
-        generateKeys(svg3, "Weekday % Weekend");
-        generateKeys(svg4, "Weekend % Weekday");
+        generateKeys(svg3, "Weekend", "Weekday");
+        generateKeys(svg4, "Weekday", "Weekend");
 
         // Creates a legend at the bottom of each map given an svg map and a ratio title
-        function generateKeys(mySvg, ratio) {
+        function generateKeys(mySvg, blue, yellow) {
 
             // Color scale key
             mySvg.append("rect")
                 .attr("x", 500)
                 .attr("y", 50)
-                .attr("width", 150)
+                .attr("width", 300)
                 .attr("height", 5)
                 .style("fill", "url(#linGradient)")
                 .attr("transform", "translate(-160,10)");
@@ -621,14 +632,30 @@
             mySvg.append("text")
                 .attr("x", 500)
                 .attr("y", 20)
-                .text(ratio)
+                .text("More Popular") 
                 .style("fill", "grey")
                 .attr("transform", "translate(-160,10)");
 
             mySvg.append("text")
                 .attr("x", 500)
                 .attr("y", 40)
-                .text("Popularity Ratio")
+                .text("on the " + blue)
+                .style("font-family", "Roboto")
+                .style("fill", "grey")
+                .attr("transform", "translate(-160,10)");
+
+
+            mySvg.append("text")
+                .attr("x", 680)
+                .attr("y", 20)
+                .text("More Popular") 
+                .style("fill", "grey")
+                .attr("transform", "translate(-160,10)");
+
+            mySvg.append("text")
+                .attr("x", 680)
+                .attr("y", 40)
+                .text("on the " + yellow)
                 .style("font-family", "Roboto")
                 .style("fill", "grey")
                 .attr("transform", "translate(-160,10)");
@@ -669,26 +696,6 @@
                 .style("font-family", "Roboto")
                 .style("fill", "grey").attr("transform", "translate(-150,10)");
 
-            mySvg.append("text")
-            .attr("x", 520)
-            .attr("y", 30 )
-            .text("Total Trips from")
-            .style("font-family", "Roboto")
-            .style("fill", "grey");
-
-            mySvg.append("text")
-            .attr("x", 520)
-            .attr("y", 50 )
-            .text("9/6/2016 to ")
-            .style("font-family", "Roboto")
-            .style("fill", "grey");
-
-            mySvg.append("text")
-            .attr("x", 520)
-            .attr("y", 70 )
-            .text("9/12/2016")
-            .style("font-family", "Roboto")
-            .style("fill", "grey");
         }
 
     </script>
