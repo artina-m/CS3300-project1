@@ -138,6 +138,7 @@
     var minWeekend = Number.MAX_SAFE_INTEGER;  // Minimum weekend rides
     var maxWeekend = Number.MIN_SAFE_INTEGER;  // Maximum weekend rides
 
+
     // Scales
     var color_weekday = d3.scaleLinear()
         .domain([-300,0, 300])
@@ -255,6 +256,7 @@
             maxWeekend = Math.max(maxWeekend, mapStationID[station].weekendRides);  // 1003.5
         }
 
+
         d3.json("nyc.geojson", function(error, nyb) {
 
             // Create Map
@@ -286,7 +288,6 @@
                 .enter().append("path")
                 .attr("class", function(d){ return d.properties.name; })
                 .attr("d", path)
-
 
             // Loop through all stations and add data to map with
             // using color and size scale
@@ -366,7 +367,7 @@
             g1.append("line") 
             .attr("x1", projection([-73.977706, 40.751873])[0])
             .attr("y1", projection([-73.977706, 40.751873])[1])
-            .attr("x2", projection([-73.977706, 40.751873])[0] - 200)
+            .attr("x2", projection([-73.977706, 40.751873])[0] - 190)
             .attr("y2", projection([-73.977706, 40.751873])[1] - 107)
             .attr("stroke-width", 1.5)
             .attr("stroke", "grey");
@@ -455,7 +456,7 @@
             g2.append("line") 
             .attr("x1", projection([-73.97620574, 40.77579377])[0])
             .attr("y1", projection([-73.97620574, 40.77579377])[1])
-            .attr("x2", projection([-73.97620574, 40.77579377])[0] - 180)
+            .attr("x2", projection([-73.97620574, 40.77579377])[0] - 190)
             .attr("y2", projection([-73.97620574, 40.77579377])[1] - 20)
             .attr("stroke-width", 1.5)
             .attr("stroke", "grey");
@@ -481,8 +482,8 @@
             g2.append("line") 
             .attr("x1", projection([-74.01129574, 40.72771408])[0])
             .attr("y1", projection([-74.01129574, 40.72771408])[1])
-            .attr("x2", projection([-74.01129574, 40.72771408])[0] - 80)
-            .attr("y2", projection([-74.01129574, 40.72771408])[1] - 90)
+            .attr("x2", projection([-74.01129574, 40.72771408])[0] - 75)
+            .attr("y2", projection([-74.01129574, 40.72771408])[1] - 50)
             .attr("stroke-width", 1.5)
             .attr("stroke", "grey");
             
@@ -507,8 +508,8 @@
             g2.append("line") 
             .attr("x1", projection([-74.016966, 40.686931])[0])
             .attr("y1", projection([-74.016966, 40.686931])[1])
-            .attr("x2", projection([-74.016966, 40.686931])[0] - 65)
-            .attr("y2", projection([-74.016966, 40.686931])[1] - 128)
+            .attr("x2", projection([-74.016966, 40.686931])[0] - 60)
+            .attr("y2", projection([-74.016966, 40.686931])[1] - 90)
             .attr("stroke-width", 1.5)
             .attr("stroke", "grey");
 
@@ -592,6 +593,7 @@
             .style("font-style", "Bold")
             .style("font-size", 30)
             .style("fill", "#272727");
+
     </script>
     </div>
 
@@ -663,7 +665,6 @@
                 .style("fill", "grey")
                 .attr("transform", "translate(-160,10)");
 
-
             mySvg.append("text")
                 .attr("x", 680)
                 .attr("y", 20)
@@ -715,6 +716,7 @@
                 .style("font-family", "Roboto")
                 .style("fill", "grey").attr("transform", "translate(-150,10)");
         }
+
     </script>
     </div>
 
@@ -896,6 +898,7 @@
     </div>
 
     <script>
+
         // Given the data, plot a curved line graph of the data in the given color
         function plot(data,color) {
             
@@ -1043,7 +1046,7 @@
 
     plot2.append("text")
         .attr("x", 60)
-        .attr("y", 85)
+        .attr("y", 90)
         .text("Citi Bikes were introduced in 2013")
         .attr("font-size", 25)
         .attr("fill", pinkColor)
